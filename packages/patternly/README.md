@@ -1,28 +1,28 @@
-# pattern-grab
+# patternly
 
 > 🤛🏻 Regular Expression Data Grabber
 
-![Github Workflow](https://github.com/hmmhmmhm/pattern-grab/actions/workflows/test.yml/badge.svg)
-![GitHub License](https://img.shields.io/github/license/hmmhmmhm/pattern-grab)
-![Jest Coverage](https://raw.githubusercontent.com/hmmhmmhm/pattern-grab/main/badges/badge-lines.svg)
-![Gzip Size](https://img.badgesize.io//hmmhmmhm/pattern-grab/main/export/pattern-grab.js.svg?compression=gzip)
+![Github Workflow](https://github.com/hmmhmmhm/node-packages/actions/workflows/test.yml/badge.svg)
+![GitHub License](https://img.shields.io/github/license/hmmhmmhm/node-packages)
+![Jest Coverage](https://raw.githubusercontent.com/hmmhmmhm/node-packages/main/badges/badge-lines.svg)
+![Gzip Size](https://img.badgesize.io//hmmhmmhm/node-packages/main/packages/patternly/export/patternly.js.svg?compression=gzip)
 [![TypeScript](https://img.shields.io/badge/%3C%2F%3E-TypeScript-%230074c1.svg)](http://www.typescriptlang.org/)
-![NPM Version](https://img.shields.io/npm/v/pattern-grab.svg?label=version)
-![jsDelivr](https://badgen.net/jsdelivr/v/npm/pattern-grab)
+![NPM Version](https://img.shields.io/npm/v/patternly.svg?label=version)
+![jsDelivr](https://badgen.net/jsdelivr/v/npm/patternly)
 [![AMA](https://img.shields.io/badge/Ask%20me-anything-1abc9c.svg)](https://twitter.com/hmartapp)
 
-Pattern-grab simplifies the process of parsing string patterns using regular expressions.
+Patternly simplifies the process of parsing string patterns using regular expressions.
 
 <br />
 
 ## 📦 Usage (ES5+)
 
 ```bash
-npm i pattern-grab
+npm i patternly
 ```
 
 ```ts
-import patternGrab from 'pattern-grab'
+import patternGrab from 'patternly'
 
 // Data
 const regex = /<[^>]*>/gm
@@ -63,7 +63,7 @@ data.forEach((element, index) => {
 ## 📦 Usage (CDN)
 
 ```html
-<script src="https://cdn.jsdelivr.net/npm/pattern-grab/export/pattern-grab.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/patternly/export/patternly.js"></script>
 ```
 
 ```js
