@@ -1,0 +1,46 @@
+{
+  "compilerOptions": {
+    "outDir": "./dist",
+    "baseUrl": ".",
+    "paths": {
+      "*": [
+        "types/*",
+        "bin"
+      ],
+      "dist/*": [
+        "../../dist/*"
+      ]
+    },
+    "importHelpers": false,
+    "sourceMap": false,
+    "declaration": true,
+    "inlineSourceMap": false,
+    "noImplicitAny": false,
+    "module": "commonjs",
+    "target": "ES5",
+    "types": [
+      "node",
+      "jest"
+    ],
+    "lib": [
+      "es5",
+      "es6",
+      "dom"
+    ],
+    "moduleResolution": "node",
+    "forceConsistentCasingInFileNames": true,
+    "noImplicitReturns": true,
+    "noImplicitThis": true,
+    "strictNullChecks": true,
+    "suppressImplicitAnyIndexErrors": true,
+    "resolveJsonModule": true,
+    "allowSyntheticDefaultImports": true,
+    "esModuleInterop": true,
+    "emitDecoratorMetadata": true,
+    "experimentalDecorators": true,
+    "skipLibCheck": true
+  },
+  "exclude": [
+    "./test"
+  ]
+}
