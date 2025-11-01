@@ -18,6 +18,9 @@ on:
       - 'pnpm-lock.yaml'
       - '.github/workflows/package-tests.yml'
 
+permissions:
+  contents: read
+
 jobs:
   test:
     runs-on: ubuntu-latest
