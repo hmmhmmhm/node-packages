@@ -16,5 +16,10 @@
   "packageManager": "pnpm@9.0.0",
   "engines": {
     "node": ">=18"
+  },
+  "pnpm": {
+    "overrides": {
+      "bigint-buffer": "npm:@trufflesuite/bigint-buffer@^1.1.10"
+    }
   }
 }
