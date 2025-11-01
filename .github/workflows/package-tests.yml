@@ -8,6 +8,7 @@ on:
       - 'packages/**'
       - 'package.json'
       - 'pnpm-lock.yaml'
+      - '.github/workflows/package-tests.yml'
   pull_request:
     branches:
       - main
@@ -15,6 +16,7 @@ on:
       - 'packages/**'
       - 'package.json'
       - 'pnpm-lock.yaml'
+      - '.github/workflows/package-tests.yml'
 
 jobs:
   test:
@@ -23,7 +25,7 @@ jobs:
     strategy:
       matrix:
         node-version: [18, 20]
-        package: [biggest, patternly, pseudo-shuffle]
+        package: [biggest, mugunghwa, patternly, pseudo-shuffle]
     
     steps:
       - name: Checkout code

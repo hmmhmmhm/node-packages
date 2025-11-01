@@ -53,6 +53,26 @@ const decoded = decode(encoded, '_');
 console.log(decoded); // 12345
 ```
 
+### 디버그 모드
+
+```typescript
+import { decode, setDebug } from 'mugunghwa';
+
+// 디버그 모드 활성화 (에러 발생 시 상세 정보 출력)
+setDebug(true);
+
+try {
+  const result = decode('잘못된코드');
+  console.log(result);
+} catch (error) {
+  console.error(error); // 상세한 에러 메시지 출력
+}
+
+// 디버그 모드 비활성화 (기본값: false)
+setDebug(false);
+const result = decode('잘못된코드'); // null 반환
+```
+
 ### CLI 스크립트 사용
 
 ```bash
@@ -106,6 +126,9 @@ multipleBase(maxMatrix: number[], indexDecimal: number): number[]
 
 // 예상 인코딩 길이 계산
 expectLength(index: number): number
+
+// 디버그 모드 설정 (에러 발생 시 상세 정보 출력)
+setDebug(value: boolean): void
 ```
 
 ## 🧮 무궁화72 구현 원리
@@ -149,6 +172,7 @@ expectLength(index: number): number
 - **홀수 단위**: 84진법 + 14개 추가 글자 = 98진법
 - **오타 보정**: 유사한 글자 자동 수정 기능 내장
 - **구분자 처리**: 가독성을 위한 구분자 자동 삽입
+- **데이터 압축**: lz-string을 활용한 인코딩 테이블 압축 저장
 
 ## 📊 예제
 
