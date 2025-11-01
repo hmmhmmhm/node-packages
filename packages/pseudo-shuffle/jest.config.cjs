@@ -1,5 +1,6 @@
 module.exports = {
   testMatch: ["**/test/**/*.+(ts|tsx|js)", "**/?(*.)+(spec|test).+(ts|tsx|js)"],
+  testPathIgnorePatterns: ["/node_modules/", "/dist/"],
   transform: {
     "^.+\\.(ts|tsx)$": ["ts-jest", {
       tsconfig: {
@@ -11,4 +12,5 @@ module.exports = {
       },
     }],
   },
+  injectGlobals: true,
 };
