@@ -3,6 +3,9 @@ module.exports = {
   testPathIgnorePatterns: ["/node_modules/", "/dist/", "/test/setup.ts"],
   setupFilesAfterEnv: ["<rootDir>/test/setup.ts"],
   watchman: false,
+  moduleNameMapper: {
+    "^pseudo-shuffle$": "<rootDir>/dist/pseudo-shuffle.cjs",
+  },
   transform: {
     "^.+\\.(ts|tsx)$": ["ts-jest", {
       tsconfig: {
