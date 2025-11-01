@@ -19,7 +19,8 @@
   },
   "pnpm": {
     "overrides": {
-      "bigint-buffer": "npm:@trufflesuite/bigint-buffer@^1.1.10"
+      "bigint-buffer": "npm:@trufflesuite/bigint-buffer@^1.1.10",
+      "minimist": "^1.2.6"
     }
   }
 }
