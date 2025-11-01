@@ -1,6 +1,8 @@
 import multiply from "./multiply";
 import compare, { isEqual } from "./compare";
 import { parseStringNumber, isInteger, isZero, addOne } from "./utils";
+import subtract from "./subtract";
+import divide from "./divide";
 
 /**
  * Calculates factorial of a non-negative integer
@@ -64,7 +66,7 @@ export function combination(n: string, r: string): string {
   }
 
   // Optimize: C(n,r) = C(n,n-r), use the smaller value
-  const nMinusR = require("./subtract").default(n, r);
+  const nMinusR = subtract(n, r);
   if (compare(r, nMinusR) > 0) {
     r = nMinusR;
   }
@@ -79,7 +81,7 @@ export function combination(n: string, r: string): string {
   
   while (compare(i, r) < 0) {
     // numerator *= (n - i)
-    const nMinusI = require("./subtract").default(n, i);
+    const nMinusI = subtract(n, i);
     numerator = multiply(numerator, nMinusI);
     
     // denominator *= (i + 1)
@@ -89,7 +91,7 @@ export function combination(n: string, r: string): string {
     i = addOne(i);
   }
   
-  return require("./divide").default(numerator, denominator, 0);
+  return divide(numerator, denominator, 0);
 }
 
 /**
@@ -125,7 +127,7 @@ export function permutation(n: string, r: string): string {
   
   while (compare(i, r) < 0) {
     // result *= (n - i)
-    const nMinusI = require("./subtract").default(n, i);
+    const nMinusI = subtract(n, i);
     result = multiply(result, nMinusI);
     i = addOne(i);
   }

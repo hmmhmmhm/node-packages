@@ -2,6 +2,7 @@ import multiply from "./multiply";
 import divide from "./divide";
 import compare, { isEqual } from "./compare";
 import { parseStringNumber, isInteger, isZero } from "./utils";
+import sqrt from "./sqrt";
 
 /**
  * Raises a number to an integer power (simple repeated multiplication)
@@ -106,7 +107,6 @@ export function nthRoot(radicand: string, n: string, precision: number = 20): st
       throw new Error("Cannot take even root of negative number");
     }
     // Use existing sqrt function with precision parameter
-    const sqrt = require("./sqrt").default;
     return sqrt(radicand, precision);
   }
   
