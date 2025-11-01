@@ -19,7 +19,8 @@
     "encode": "node scripts/encode.cjs",
     "decode": "node scripts/decode.cjs",
     "random": "node scripts/random.cjs",
-    "validate": "node scripts/validate.cjs"
+    "validate": "node scripts/validate.cjs",
+    "generate-constants": "node scripts/generate-constants.cjs"
   },
   "keywords": [
     "korean",
