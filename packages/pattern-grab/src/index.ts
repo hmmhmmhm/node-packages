@@ -5,9 +5,14 @@
 export const getPositions = (regex: RegExp, string: string) => {
   let m: RegExpExecArray | null = null
   const positions: [number, number][] = []
-  const pattern = new RegExp(regex)
-  while ((m = pattern.exec(string)) !== null)
+  const pattern = new RegExp(regex.source, regex.flags)
+  while ((m = pattern.exec(string)) !== null) {
     positions.push([m.index, m.index + m[0].length])
+    // Prevent infinite loop on zero-width matches
+    if (m[0].length === 0) {
+      pattern.lastIndex++
+    }
+  }
   return positions
 }
 
@@ -31,31 +36,34 @@ export const patternGrab = ({
   const data: string[] = []
   const positions: number[] = []
 
-  if (matches.length === 0) return { data, positions }
+  if (matches.length > 0) {
+    if (matches[0][0] !== 0) {
+      data.push(string.substring(0, matches[0][0]))
+    }
 
-  if (matches[0][0] !== 0) {
-    const pre = matches.shift()!
-    data.push(string.substr(0, pre[0]))
+    for (let matchIndex = 0; matchIndex < matches.length; matchIndex++) {
+      const current = matches[matchIndex]
+      positions.push(data.length)
+      const matchedText = string.substring(current[0], current[1])
+      data.push(matchedText)
 
-    positions.push(data.length)
-    data.push(string.substr(pre[0], pre[1] - pre[0]))
+      /* istanbul ignore else */
+      if (matchIndex + 1 < matches.length) {
+        const next = matches[matchIndex + 1]
+        if (current[1] !== next[0]) {
+          data.push(string.substring(current[1], next[0]))
+        }
+      }
+    }
+
+    if (matches[matches.length - 1]) {
+      const lastMatchIndex = matches[matches.length - 1][1]
+      if (lastMatchIndex !== string.length) {
+        data.push(string.substring(lastMatchIndex, string.length))
+      }
+    }
   }
 
-  for (const matchIndex in matches) {
-    const current = matches[matchIndex]
-    const next = matches[Number(matchIndex) + 1]
-    positions.push(data.length)
-    data.push(string.substr(current[0], current[1] - current[0]))
-
-    if (next && current[1] != next[0])
-      data.push(string.substr(current[1], next[0] - current[1]))
-  }
-
-  if (matches[matches.length - 1]) {
-    const lastMatchIndex = matches[matches.length - 1][1]
-    if (lastMatchIndex !== string.length)
-      data.push(string.substr(lastMatchIndex, string.length - lastMatchIndex))
-  }
   return { data, positions }
 }
 

@@ -46,7 +46,7 @@ describe('Pattern Grab Test', () => {
     expect(grabPlain.data).toMatchObject([])
 
     const grabNotFirst = patternGrab({ regex: /Yup/gm, string: html })
-    expect(grabNotFirst.data).toMatchObject(['<span>', 'Yup'])
+    expect(grabNotFirst.data).toMatchObject(['<span>', 'Yup', ' This is a <b>Test</b> Yea <img src="/blabla.png" /> Its Ok?</span>'])
 
     const grabEndPlainRemainHTML = patternGrab({
       regex: /<[^>]*>/gm,
