@@ -1,0 +1,54 @@
+{
+  "name": "mugunghwa",
+  "type": "module",
+  "version": "1.0.0",
+  "description": "Korean text encoding/decoding library using base-72 numeral system",
+  "source": "src/index.ts",
+  "exports": {
+    "types": "./dist/index.d.ts",
+    "require": "./dist/index.cjs",
+    "default": "./dist/index.modern.js"
+  },
+  "main": "./dist/index.cjs",
+  "module": "./dist/index.modern.js",
+  "types": "./dist/index.d.ts",
+  "scripts": {
+    "build": "microbundle",
+    "watch": "microbundle watch",
+    "test": "jest",
+    "encode": "node scripts/encode.cjs",
+    "decode": "node scripts/decode.cjs",
+    "random": "node scripts/random.cjs",
+    "validate": "node scripts/validate.cjs"
+  },
+  "keywords": [
+    "korean",
+    "encoding",
+    "base72",
+    "text",
+    "compression"
+  ],
+  "author": "hmmhmmhm",
+  "license": "MIT",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/hmmhmmhm/node-packages.git",
+    "directory": "packages/mugunghwa"
+  },
+  "bugs": {
+    "url": "https://github.com/hmmhmmhm/node-packages/issues"
+  },
+  "homepage": "https://github.com/hmmhmmhm/node-packages/tree/main/packages/mugunghwa#readme",
+  "dependencies": {
+    "lz-string": "^1.5.0"
+  },
+  "devDependencies": {
+    "@types/jest": "^29.5.13",
+    "@types/node": "^20.14.0",
+    "jest": "^29.7.0",
+    "microbundle": "^0.15.1",
+    "ts-jest": "^29.2.5",
+    "tsx": "^4.7.0",
+    "typescript": "^5.6.2"
+  }
+}
