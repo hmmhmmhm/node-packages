@@ -28,6 +28,15 @@
   ],
   "author": "hmmhmmhm",
   "license": "MIT",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/hmmhmmhm/node-packages.git",
+    "directory": "packages/biggest"
+  },
+  "bugs": {
+    "url": "https://github.com/hmmhmmhm/node-packages/issues"
+  },
+  "homepage": "https://github.com/hmmhmmhm/node-packages/tree/main/packages/biggest#readme",
   "devDependencies": {
     "@types/jest": "^29.5.13",
     "husky": "^9.1.6",

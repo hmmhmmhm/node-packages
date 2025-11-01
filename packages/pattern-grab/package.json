@@ -35,6 +35,15 @@
   ],
   "author": "hmmhmmhm",
   "license": "MIT",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/hmmhmmhm/node-packages.git",
+    "directory": "packages/pattern-grab"
+  },
+  "bugs": {
+    "url": "https://github.com/hmmhmmhm/node-packages/issues"
+  },
+  "homepage": "https://github.com/hmmhmmhm/node-packages/tree/main/packages/pattern-grab#readme",
   "devDependencies": {
     "@types/jest": "^30.0.0",
     "@types/node": "^24.9.2",

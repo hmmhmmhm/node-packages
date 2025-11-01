@@ -18,7 +18,8 @@
   },
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/hmmhmmhm/pseudo-shuffle.git"
+    "url": "https://github.com/hmmhmmhm/node-packages.git",
+    "directory": "packages/pseudo-shuffle"
   },
   "keywords": [
     "shuffle",
@@ -39,9 +40,9 @@
   "author": "hmmhmmhm",
   "license": "MIT",
   "bugs": {
-    "url": "https://github.com/hmmhmmhm/pseudo-shuffle/issues"
+    "url": "https://github.com/hmmhmmhm/node-packages/issues"
   },
-  "homepage": "https://github.com/hmmhmmhm/pseudo-shuffle#readme",
+  "homepage": "https://github.com/hmmhmmhm/node-packages/tree/main/packages/pseudo-shuffle#readme",
   "dependencies": {
     "node-fe1-fpe": "^1.0.0-beta.2"
   },
