@@ -3,11 +3,15 @@
   "compilerOptions": {
     "outDir": "dist",
     "rootDir": ".",
+    "baseUrl": ".",
     "strict": false,
     "types": [
       "node",
       "jest"
-    ]
+    ],
+    "paths": {
+      "pseudo-shuffle": ["./dist/pseudo-shuffle.cjs"]
+    }
   },
   "include": [
     "src/**/*",

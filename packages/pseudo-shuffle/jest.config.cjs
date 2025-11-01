@@ -3,6 +3,7 @@ module.exports = {
   testPathIgnorePatterns: ["/node_modules/", "/dist/", "/test/setup.ts"],
   setupFilesAfterEnv: ["<rootDir>/test/setup.ts"],
   watchman: false,
+  moduleFileExtensions: ["ts", "tsx", "js", "jsx", "json"],
   moduleNameMapper: {
     "^pseudo-shuffle$": "<rootDir>/dist/pseudo-shuffle.cjs",
   },
@@ -11,6 +12,8 @@ module.exports = {
       tsconfig: {
         outDir: null,
         rootDir: null,
+        moduleResolution: "node",
+        esModuleInterop: true,
       },
       diagnostics: {
         ignoreCodes: [151002],
