@@ -16,5 +16,14 @@ export default {
   testPathIgnorePatterns: ['/lib/', '/node_modules/'],
   moduleFileExtensions: ['ts', 'tsx', 'js', 'jsx', 'json', 'node'],
   collectCoverage: true,
-  coverageReporters: ['json-summary']
+  coverageReporters: ['json-summary'],
+  coveragePathIgnorePatterns: ['/node_modules/'],
+  coverageThreshold: {
+    global: {
+      branches: 92.85,
+      functions: 100,
+      lines: 100,
+      statements: 100
+    }
+  }
 }

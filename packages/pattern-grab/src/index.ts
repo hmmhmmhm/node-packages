@@ -47,11 +47,10 @@ export const patternGrab = ({
       const matchedText = string.substring(current[0], current[1])
       data.push(matchedText)
 
-      /* istanbul ignore else */
       if (matchIndex + 1 < matches.length) {
-        const next = matches[matchIndex + 1]
-        if (current[1] !== next[0]) {
-          data.push(string.substring(current[1], next[0]))
+        const nextMatch = matches[matchIndex + 1]
+        if (current[1] !== nextMatch[0]) {
+          data.push(string.substring(current[1], nextMatch[0]))
         }
       }
     }
