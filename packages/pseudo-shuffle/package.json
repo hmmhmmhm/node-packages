@@ -1,0 +1,56 @@
+{
+  "name": "pseudo-shuffle",
+  "version": "1.0.2",
+  "description": "Make the index look like it is shuffled according to the range so that it is not conflicted without the actual shuffle.",
+  "type": "module",
+  "source": "src/pseudo-shuffle.ts",
+  "exports": {
+    "require": "./dist/pseudo-shuffle.cjs",
+    "default": "./dist/pseudo-shuffle.modern.js"
+  },
+  "main": "./dist/pseudo-shuffle.cjs",
+  "module": "./dist/pseudo-shuffle.module.js",
+  "unpkg": "./dist/pseudo-shuffle.umd.js",
+  "types": "./dist/pseudo-shuffle.d.ts",
+  "scripts": {
+    "build": "microbundle",
+    "test": "microbundle && jest"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/hmmhmmhm/pseudo-shuffle.git"
+  },
+  "keywords": [
+    "shuffle",
+    "shuffle-algorithms",
+    "fpe",
+    "format-preserving-encryption",
+    "ems",
+    "cjs",
+    "umd",
+    "esm",
+    "es",
+    "module",
+    "typescript",
+    "ts",
+    "javascript",
+    "js"
+  ],
+  "author": "hmmhmmhm",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/hmmhmmhm/pseudo-shuffle/issues"
+  },
+  "homepage": "https://github.com/hmmhmmhm/pseudo-shuffle#readme",
+  "dependencies": {
+    "node-fe1-fpe": "^1.0.0-beta.2"
+  },
+  "devDependencies": {
+    "@sindresorhus/tsconfig": "^3.0.1",
+    "@types/jest": "^29.5.1",
+    "@types/node": "^20.2.5",
+    "jest": "^29.5.0",
+    "microbundle": "^0.15.1",
+    "ts-jest": "^29.1.0"
+  }
+}
