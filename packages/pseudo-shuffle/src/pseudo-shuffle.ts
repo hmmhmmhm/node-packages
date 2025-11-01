@@ -38,8 +38,8 @@ export const encode = ({
   index,
   min,
   max,
-  privateKey,
-  publicKey,
+  privateKey = defaultKey,
+  publicKey = defaultKey,
 }: IPsuedoShuffleOption): number => {
   // Algorithm can be applied only when the difference
   // between the min and max values is at least 4.
@@ -68,8 +68,8 @@ export const encode = ({
     fe1.encrypt(
       max - min + 1,
       index - min,
-      privateKey ?? defaultKey,
-      publicKey ?? defaultKey
+      privateKey,
+      publicKey
     ) + min
   );
 };
@@ -78,8 +78,8 @@ export const decode = ({
   index,
   min,
   max,
-  privateKey,
-  publicKey,
+  privateKey = defaultKey,
+  publicKey = defaultKey,
 }: IPsuedoShuffleOption): number => {
   // Algorithm can be applied only when the difference
   // between the min and max values is at least 4.
@@ -109,8 +109,8 @@ export const decode = ({
         index: Math.ceil(min + (max - min) / 2),
         max,
         min,
-        privateKey: privateKey ?? defaultKey,
-        publicKey: publicKey ?? defaultKey,
+        privateKey,
+        publicKey,
       })
     )
       return max + 1;
@@ -119,8 +119,8 @@ export const decode = ({
     fe1.decrypt(
       max - min + 1,
       index - min,
-      privateKey ?? defaultKey,
-      publicKey ?? defaultKey
+      privateKey,
+      publicKey
     ) + min
   );
 };
