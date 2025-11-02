@@ -91,7 +91,7 @@ describe('curse function', () => {
     const source = 'alert("test")';
     const result = curse(source, { includePrelude: false, characterSet: 'emoji' });
     expect(result).not.toContain('A=');
-    expect(result).toContain('😉(');
+    expect(result).toContain('🦊('); // J maps to emojiChars[9] which is 🦊
     expect(result).toContain('😀');
   });
 });
