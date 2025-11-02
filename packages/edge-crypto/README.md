@@ -1,4 +1,4 @@
-# crypto-worker
+# edge-crypto
 
 Unified SubtleCrypto utilities for Node.js, browsers, and Cloudflare Workers without external dependencies.
 
@@ -14,11 +14,11 @@ Unified SubtleCrypto utilities for Node.js, browsers, and Cloudflare Workers wit
 ## Installation
 
 ```bash
-npm install crypto-worker
+npm install edge-crypto
 # or
-pnpm add crypto-worker
+pnpm add edge-crypto
 # or
-yarn add crypto-worker
+yarn add edge-crypto
 ```
 
 ## Usage
@@ -26,7 +26,7 @@ yarn add crypto-worker
 ### Check Environment Support
 
 ```typescript
-import { isSupported } from 'crypto-worker';
+import { isSupported } from 'edge-crypto';
 
 // Check if crypto operations are supported
 if (isSupported()) {
@@ -41,7 +41,7 @@ if (isSupported()) {
 ### Encryption & Decryption
 
 ```typescript
-import { encrypt, decrypt, encryptToString, decryptFromString } from 'crypto-worker';
+import { encrypt, decrypt, encryptToString, decryptFromString } from 'edge-crypto';
 
 // Basic encryption/decryption
 const encrypted = await encrypt('my-secret-data', 'my-password');
@@ -61,7 +61,7 @@ const encrypted = await encrypt('my-secret-data', 'my-password', {
 ### Signing & Verification
 
 ```typescript
-import { sign, verify, generateKey } from 'crypto-worker';
+import { sign, verify, generateKey } from 'edge-crypto';
 
 // Generate a secure random key
 const secretKey = generateKey();
@@ -80,7 +80,7 @@ const isValid = await verify('my-message', signature, secretKey, { hash: 'SHA-51
 ### Hashing
 
 ```typescript
-import { hash } from 'crypto-worker';
+import { hash } from 'edge-crypto';
 
 // Generate SHA-256 hash
 const hash256 = await hash('my-data');
@@ -101,7 +101,7 @@ import {
   exportPrivateKey,
   importPublicKey,
   importPrivateKey,
-} from 'crypto-worker';
+} from 'edge-crypto';
 
 // Generate RSA key pair
 const keyPair = await generateRSAKeyPair({ modulusLength: 2048 });
@@ -128,7 +128,7 @@ import {
   generateRSASigningKeyPair,
   signRSA,
   verifyRSA,
-} from 'crypto-worker';
+} from 'edge-crypto';
 
 // Generate RSA key pair for signing
 const keyPair = await generateRSASigningKeyPair({ modulusLength: 2048 });
@@ -160,7 +160,7 @@ import {
   base64ToArrayBuffer,
   generateSalt,
   generateIV,
-} from 'crypto-worker';
+} from 'edge-crypto';
 
 // Convert between string and Uint8Array
 const buffer = stringToUint8Array('hello');

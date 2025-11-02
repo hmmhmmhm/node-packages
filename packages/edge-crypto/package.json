@@ -1,7 +1,7 @@
 {
-  "name": "crypto-worker",
+  "name": "edge-crypto",
   "type": "module",
-  "version": "0.1.0",
+  "version": "0.1.1",
   "description": "Unified SubtleCrypto utilities for Node.js, browsers, and Cloudflare Workers without external dependencies.",
   "source": "src/index.ts",
   "exports": {
@@ -37,12 +37,12 @@
   "repository": {
     "type": "git",
     "url": "https://github.com/hmmhmmhm/node-packages.git",
-    "directory": "packages/crypto-worker"
+    "directory": "packages/edge-crypto"
   },
   "bugs": {
     "url": "https://github.com/hmmhmmhm/node-packages/issues"
   },
-  "homepage": "https://github.com/hmmhmmhm/node-packages/tree/main/packages/crypto-worker#readme",
+  "homepage": "https://github.com/hmmhmmhm/node-packages/tree/main/packages/edge-crypto#readme",
   "engines": {
     "node": ">=20.0.0"
   },

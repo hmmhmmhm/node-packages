@@ -1,5 +1,5 @@
 /**
- * crypto-worker
+ * edge-crypto
  * 
  * Unified SubtleCrypto utilities for Node.js, browsers, and Cloudflare Workers
  * without external dependencies.
