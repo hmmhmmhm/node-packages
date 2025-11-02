@@ -1,0 +1,54 @@
+{
+  "name": "crypto-worker",
+  "type": "module",
+  "version": "0.1.0",
+  "description": "Unified SubtleCrypto utilities for Node.js, browsers, and Cloudflare Workers without external dependencies.",
+  "source": "src/index.ts",
+  "exports": {
+    ".": {
+      "types": "./dist/index.d.ts",
+      "require": "./dist/index.cjs",
+      "default": "./dist/index.modern.js"
+    },
+    "./package.json": "./package.json"
+  },
+  "main": "./dist/index.cjs",
+  "module": "./dist/index.modern.js",
+  "types": "./dist/index.d.ts",
+  "files": [
+    "dist"
+  ],
+  "scripts": {
+    "build": "microbundle",
+    "watch": "microbundle watch",
+    "test": "jest",
+    "release": "release-it"
+  },
+  "keywords": [
+    "crypto",
+    "subtlecrypto",
+    "webcrypto",
+    "workers",
+    "browser",
+    "node"
+  ],
+  "author": "hmmhmmhm",
+  "license": "MIT",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/hmmhmmhm/node-packages.git",
+    "directory": "packages/crypto-worker"
+  },
+  "bugs": {
+    "url": "https://github.com/hmmhmmhm/node-packages/issues"
+  },
+  "homepage": "https://github.com/hmmhmmhm/node-packages/tree/main/packages/crypto-worker#readme",
+  "devDependencies": {
+    "@types/jest": "^29.5.13",
+    "jest": "^29.7.0",
+    "microbundle": "^0.15.1",
+    "release-it": "^19.0.5",
+    "ts-jest": "^29.2.5",
+    "typescript": "^5.6.2"
+  }
+}

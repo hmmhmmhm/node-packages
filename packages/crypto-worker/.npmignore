@@ -1,0 +1,10 @@
+src
+test
+node_modules
+.turbo
+.DS_Store
+*.log
+coverage
+tsconfig.json
+jest.config.js
+.gitignore
