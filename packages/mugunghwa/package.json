@@ -1,7 +1,7 @@
 {
   "name": "mugunghwa",
   "type": "module",
-  "version": "1.0.0",
+  "version": "1.0.1",
   "description": "Korean text encoding/decoding library using base-72 numeral system",
   "source": "src/index.ts",
   "exports": {
@@ -33,7 +33,7 @@
   "license": "MIT",
   "repository": {
     "type": "git",
-    "url": "https://github.com/hmmhmmhm/node-packages.git",
+    "url": "git+https://github.com/hmmhmmhm/node-packages.git",
     "directory": "packages/mugunghwa"
   },
   "bugs": {
