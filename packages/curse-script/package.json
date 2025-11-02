@@ -18,7 +18,7 @@
   "scripts": {
     "build": "microbundle",
     "watch": "microbundle watch",
-    "dev": "tsx src/dev.ts",
+    "dev": "node bin/cli.js",
     "test": "jest",
     "release": "release-it"
   },
