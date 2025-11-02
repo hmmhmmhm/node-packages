@@ -1,0 +1,46 @@
+{
+  "name": "gauss-spiral",
+  "type": "module",
+  "version": "1.0.0",
+  "description": "A library for converting between coordinates and indices using the Gauss spiral algorithm",
+  "source": "src/index.ts",
+  "exports": {
+    "types": "./dist/index.d.ts",
+    "require": "./dist/index.cjs",
+    "default": "./dist/index.modern.js"
+  },
+  "main": "./dist/index.cjs",
+  "module": "./dist/index.modern.js",
+  "types": "./dist/index.d.ts",
+  "scripts": {
+    "build": "microbundle",
+    "watch": "microbundle watch",
+    "test": "jest"
+  },
+  "keywords": [
+    "gauss",
+    "spiral",
+    "coordinates",
+    "lattice",
+    "algorithm",
+    "math"
+  ],
+  "author": "hmmhmmhm",
+  "license": "MIT",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/hmmhmmhm/node-packages.git",
+    "directory": "packages/gauss-spiral"
+  },
+  "bugs": {
+    "url": "https://github.com/hmmhmmhm/node-packages/issues"
+  },
+  "homepage": "https://github.com/hmmhmmhm/node-packages/tree/main/packages/gauss-spiral#readme",
+  "devDependencies": {
+    "@types/jest": "^29.5.13",
+    "jest": "^29.7.0",
+    "microbundle": "^0.15.1",
+    "ts-jest": "^29.2.5",
+    "typescript": "^5.6.2"
+  }
+}
