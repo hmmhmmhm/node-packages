@@ -9,6 +9,9 @@ Personal research packages by hmmhmmhm - A collection of useful TypeScript/JavaS
 ### [biggest](./packages/biggest)
 Tiny 2kb, zero deps, infinite precision library for safe and precise arithmetic operations on Big Integer and Big Decimal.
 
+### [pseudo-shuffle](./packages/pseudo-shuffle)
+Make the index look like it is shuffled according to the range without actual shuffling - deterministic pseudo-random shuffling.
+
 ### [edge-crypto](./packages/edge-crypto)
 Unified SubtleCrypto utilities for Node.js, browsers, and Cloudflare Workers without external dependencies.
 
@@ -21,8 +24,8 @@ Fill a circle with dots from the center out — efficiently compute `(x, y) ↔ 
 ### [patternly](./packages/patternly)
 Regular Expression Data Grabber - Simplifies parsing string patterns using regular expressions.
 
-### [pseudo-shuffle](./packages/pseudo-shuffle)
-Make the index look like it is shuffled according to the range without actual shuffling - deterministic pseudo-random shuffling.
+### [curse-script](./packages/curse-script)
+A JavaScript obfuscator that converts code into cursed spell-like syntax.
 
 ## License
 

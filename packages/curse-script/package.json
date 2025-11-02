@@ -1,0 +1,71 @@
+{
+  "name": "curse-script",
+  "type": "module",
+  "version": "1.0.0",
+  "description": "A JavaScript obfuscator that converts code into cursed spell-like syntax",
+  "source": "src/index.ts",
+  "exports": {
+    "types": "./dist/index.d.ts",
+    "require": "./dist/index.cjs",
+    "default": "./dist/index.modern.js"
+  },
+  "main": "./dist/index.cjs",
+  "module": "./dist/index.modern.js",
+  "types": "./dist/index.d.ts",
+  "bin": {
+    "curse-script": "./bin/cli.js"
+  },
+  "scripts": {
+    "build": "microbundle",
+    "watch": "microbundle watch",
+    "dev": "tsx src/dev.ts",
+    "test": "jest",
+    "release": "release-it"
+  },
+  "keywords": [
+    "obfuscator",
+    "javascript",
+    "curse",
+    "jsfuck",
+    "esoteric"
+  ],
+  "author": "hmmhmmhm",
+  "license": "MIT",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/hmmhmmhm/node-packages.git",
+    "directory": "packages/curse-script"
+  },
+  "bugs": {
+    "url": "https://github.com/hmmhmmhm/node-packages/issues"
+  },
+  "homepage": "https://github.com/hmmhmmhm/node-packages/tree/main/packages/curse-script#readme",
+  "devDependencies": {
+    "@types/jest": "^29.5.13",
+    "@types/node": "^22.0.0",
+    "husky": "^9.1.6",
+    "jest": "^29.7.0",
+    "lint-staged": "^15.2.10",
+    "microbundle": "^0.15.1",
+    "release-it": "^19.0.5",
+    "ts-jest": "^29.2.5",
+    "tsx": "^4.19.0",
+    "typescript": "^5.6.2"
+  },
+  "husky": {
+    "hooks": {
+      "pre-commit": "lint-staged"
+    }
+  },
+  "release-it": {
+    "hooks": {
+      "before:init": "pnpm run build"
+    }
+  },
+  "lint-staged": {
+    "*.ts": [
+      "pnpm run lint",
+      "prettier --write"
+    ]
+  }
+}

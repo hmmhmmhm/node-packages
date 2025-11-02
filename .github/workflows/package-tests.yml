@@ -28,7 +28,7 @@ jobs:
     strategy:
       matrix:
         node-version: [20]
-        package: [biggest, edge-crypto, gauss-spiral, mugunghwa, patternly, pseudo-shuffle]
+        package: [biggest, curse-script, edge-crypto, gauss-spiral, mugunghwa, patternly, pseudo-shuffle]
     
     steps:
       - name: Checkout code
