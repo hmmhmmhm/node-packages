@@ -57,6 +57,7 @@ export {
 
 // Export utility functions
 export {
+  isSupported,
   getCrypto,
   stringToUint8Array,
   uint8ArrayToString,

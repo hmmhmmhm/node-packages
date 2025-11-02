@@ -23,6 +23,21 @@ yarn add crypto-worker
 
 ## Usage
 
+### Check Environment Support
+
+```typescript
+import { isSupported } from 'crypto-worker';
+
+// Check if crypto operations are supported
+if (isSupported()) {
+  console.log('SubtleCrypto is available!');
+  // Proceed with crypto operations
+} else {
+  console.error('SubtleCrypto is not supported in this environment');
+  // Fallback or error handling
+}
+```
+
 ### Encryption & Decryption
 
 ```typescript
@@ -278,13 +293,28 @@ Imports a key from base64 format.
 - **keyUsages**: `KeyUsage[]` - Key usage array
 - **Returns**: `Promise<CryptoKey>`
 
+### Utility Functions
+
+#### `isSupported()`
+Checks if SubtleCrypto is supported in the current environment.
+
+- **Returns**: `boolean` - True if SubtleCrypto is available, false otherwise
+- **Example**:
+  ```typescript
+  if (isSupported()) {
+    // Safe to use crypto operations
+  }
+  ```
+
 ## Platform Support
 
-- ✅ Node.js 16+
+- ✅ Node.js 20+
 - ✅ Modern browsers (Chrome, Firefox, Safari, Edge)
 - ✅ Cloudflare Workers
 - ✅ Deno
 - ✅ Bun
+
+> **Note**: Node.js 18 and earlier versions may have limited or no SubtleCrypto support in certain environments. We recommend using Node.js 20 or later for full compatibility.
 
 ## Security Notes
 

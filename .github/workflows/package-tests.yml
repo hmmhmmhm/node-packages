@@ -27,7 +27,7 @@ jobs:
     
     strategy:
       matrix:
-        node-version: [18, 20]
+        node-version: [20]
         package: [biggest, crypto-worker, gauss-spiral, mugunghwa, patternly, pseudo-shuffle]
     
     steps:

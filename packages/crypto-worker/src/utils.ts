@@ -1,4 +1,34 @@
 /**
+ * Check if SubtleCrypto is supported in the current environment
+ * @returns True if SubtleCrypto is available, false otherwise
+ * @example
+ * ```typescript
+ * if (isSupported()) {
+ *   const encrypted = await encrypt('data', 'password');
+ * } else {
+ *   console.error('Crypto operations are not supported in this environment');
+ * }
+ * ```
+ */
+export function isSupported(): boolean {
+  try {
+    // Browser and Cloudflare Workers
+    if (typeof crypto !== 'undefined' && crypto.subtle) {
+      return true;
+    }
+    
+    // Node.js
+    if (typeof globalThis !== 'undefined' && globalThis.crypto?.subtle) {
+      return true;
+    }
+    
+    return false;
+  } catch {
+    return false;
+  }
+}
+
+/**
  * Get the global crypto object (works in Node.js, browsers, and Cloudflare Workers)
  * @returns The SubtleCrypto instance
  * @throws {Error} If crypto is not available

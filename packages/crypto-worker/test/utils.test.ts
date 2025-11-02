@@ -1,4 +1,5 @@
 import {
+  isSupported,
   getCrypto,
   stringToUint8Array,
   uint8ArrayToString,
@@ -10,6 +11,17 @@ import {
 } from '../src/utils';
 
 describe('Utils', () => {
+  describe('isSupported', () => {
+    it('should return true in Node.js environment', () => {
+      const supported = isSupported();
+      expect(supported).toBe(true);
+    });
+
+    it('should be callable without throwing', () => {
+      expect(() => isSupported()).not.toThrow();
+    });
+  });
+
   describe('getCrypto', () => {
     it('should return SubtleCrypto instance', () => {
       const crypto = getCrypto();
