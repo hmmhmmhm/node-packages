@@ -1,5 +1,7 @@
 # patternly
 
+[![Wiki](https://img.shields.io/badge/📖_Wiki-deepwiki-blue)](https://deepwiki.com/hmmhmmhm/node-packages)
+
 > 🤛🏻 Regular Expression Data Grabber
 
 ![Github Workflow](https://github.com/hmmhmmhm/node-packages/actions/workflows/test.yml/badge.svg)

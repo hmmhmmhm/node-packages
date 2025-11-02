@@ -1,5 +1,7 @@
 # gauss-spiral
 
+[![Wiki](https://img.shields.io/badge/📖_Wiki-deepwiki-blue)](https://deepwiki.com/hmmhmmhm/node-packages)
+
 Fill a circle with dots from the center out — efficiently. Compute `(x, y) ↔ n` for very large cases fast (binary search + `O(√m)` counting, `O(log m)` search) with a simple, plug-and-play API — no math background needed.
 
 Utilities to map between an integer spiral's visit order `n` and lattice coordinates `(x, y)` on Z^2.

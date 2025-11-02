@@ -1,5 +1,6 @@
 # 🔢 biggest
 
+[![Wiki](https://img.shields.io/badge/📖_Wiki-deepwiki-blue)](https://deepwiki.com/hmmhmmhm/node-packages)
 [![Poster Image](https://i.imgur.com/fxsy1HD.png)](https://i.imgur.com/fxsy1HD.png)
 
 > Tiny 2kb, zero deps, infinite precision: Biggest for all your big integer + big decimal needs.

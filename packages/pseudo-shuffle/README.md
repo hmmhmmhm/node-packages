@@ -1,5 +1,6 @@
 # 🔀 pseudo-shuffle
 
+[![Wiki](https://img.shields.io/badge/📖_Wiki-deepwiki-blue)](https://deepwiki.com/hmmhmmhm/node-packages)
 [![Actual Image](https://i.imgur.com/w1Iz3h1.png)](https://i.imgur.com/w1Iz3h1.png)
 
 > 📜 Make the index look like it is shuffled according to the range so that it is not conflicted without the actual shuffle.
