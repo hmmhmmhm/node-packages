@@ -1,5 +1,7 @@
 # Node Packages
 
+[![Wiki](https://img.shields.io/badge/📖_Wiki-deepwiki-blue)](https://deepwiki.com/hmmhmmhm/node-packages)
+
 Personal research packages by hmmhmmhm - A collection of useful TypeScript/JavaScript libraries exploring various programming concepts.
 
 ## 📦 Packages
