@@ -115,7 +115,7 @@ function replaceWithCharacterSet(script: string, chars: string[]): string {
 export function curse(source: string, options: CurseOptions = {}) {
   const {
     includePrelude = true,
-    characterSet = 'runic'
+    characterSet = 'oldPersian'
   } = options;
 
   const expressionParts = [];
