@@ -47,7 +47,7 @@ describe('curse function', () => {
 
   it('should support custom character array', () => {
     const source = 'alert("test")';
-    const customChars = ['α', 'β', 'γ', 'δ', 'ε', 'ζ', 'η', 'θ', 'ι', 'κ', 'λ', 'μ', 'ν', 'ξ', 'ο', 'π', 'ρ', 'σ', 'τ', 'υ', 'φ', 'χ', 'ψ', 'ω'];
+    const customChars = ['α', 'β', 'γ', 'δ', 'ε', 'ζ', 'η', 'θ', 'ι', 'κ', 'λ', 'μ', 'ν', 'ξ', 'ο', 'π', 'ρ', 'σ', 'τ', 'υ', 'φ', 'χ', 'ψ', 'ω', 'ϊ'];
     const result = curse(source, { characterSet: customChars });
     // Should contain Greek characters
     expect(result).toContain('α');
@@ -58,7 +58,7 @@ describe('curse function', () => {
   it('should throw error if custom character set is too short', () => {
     const source = 'alert("test")';
     const shortChars = ['α', 'β', 'γ'];
-    expect(() => curse(source, { characterSet: shortChars })).toThrow('Character set must contain at least 24 characters');
+    expect(() => curse(source, { characterSet: shortChars })).toThrow('Character set must contain at least 25 characters');
   });
 
   it('should support emoji character set', () => {
