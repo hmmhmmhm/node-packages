@@ -28,11 +28,11 @@ describe('curse function', () => {
     expect(result.length).toBeGreaterThan(0);
   });
 
-  it('should use runic characters by default', () => {
+  it('should use Old Persian characters by default', () => {
     const source = 'alert("test")';
     const result = curse(source);
-    // Should contain runic characters instead of Latin A-X
-    expect(result).toContain('ᚠ');
+    // Should contain Old Persian characters instead of Latin A-X
+    expect(result).toContain('𐎠');
     expect(result).not.toContain('A=');
   });
 
@@ -79,12 +79,12 @@ describe('curse function', () => {
     expect(result).not.toContain('ᚠ');
   });
 
-  it('should work with runic and no prelude', () => {
+  it('should work with Old Persian and no prelude', () => {
     const source = 'alert("test")';
     const result = curse(source, { includePrelude: false });
     expect(result).not.toContain('A=');
-    expect(result).toContain('ᚩ(');
-    expect(result).toContain('ᚠ');
+    expect(result).toContain('𐎩('); // J maps to oldPersianChars[9] which is 𐎩
+    expect(result).toContain('𐎠');
   });
 
   it('should work with emoji and no prelude', () => {
