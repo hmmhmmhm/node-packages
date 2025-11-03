@@ -2,6 +2,10 @@
 
 [![Wiki](https://img.shields.io/badge/📖_Wiki-deepwiki-blue)](https://deepwiki.com/hmmhmmhm/node-packages)
 
+[![Mugunghwa](https://hmart.app/ko/mugunghwa/og.png)](https://hmart.app/ko/mugunghwa)
+
+**[🔗 쇼케이스 및 소개 페이지 보기](https://hmart.app/ko/mugunghwa)**
+
 > 한글 기반 72진법 인코딩 라이브러리
 
 무궁화는 10진수 숫자를 한글로 인코딩/디코딩하는 TypeScript 라이브러리입니다. 한글의 특성을 활용하여 숫자를 간결하고 읽기 쉬운 한글 문자열로 변환합니다.
