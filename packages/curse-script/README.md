@@ -1,5 +1,9 @@
 # Curse Script
 
+[![Curse Script](https://hmart.app/en/curse-script/og.png)](https://hmart.app/en/curse-script)
+
+**[🔗 Showcase and Introduction Page](https://hmart.app/en/curse-script)**
+
 A JavaScript obfuscator that converts code into cursed spell-like syntax.
 
 ## Installation
