@@ -15,6 +15,10 @@ Make the index look like it is shuffled according to the range without actual sh
 ### [edge-crypto](./packages/edge-crypto)
 Unified SubtleCrypto utilities for Node.js, browsers, and Cloudflare Workers without external dependencies.
 
+[![Edge Crypto](https://hmart.app/en/edge-crypto/og.png)](https://hmart.app/en/edge-crypto)
+
+**[🔗 Showcase and Introduction Page](https://hmart.app/en/edge-crypto)**
+
 ### [gauss-spiral](./packages/gauss-spiral)
 Fill a circle with dots from the center out — efficiently compute `(x, y) ↔ n` mapping for spiral enumeration.
 

@@ -2,6 +2,10 @@
 
 [![Wiki](https://img.shields.io/badge/📖_Wiki-deepwiki-blue)](https://deepwiki.com/hmmhmmhm/node-packages)
 
+[![Edge Crypto](https://hmart.app/en/edge-crypto/og.png)](https://hmart.app/en/edge-crypto)
+
+**[🔗 Showcase and Introduction Page](https://hmart.app/en/edge-crypto)**
+
 Unified SubtleCrypto utilities for Node.js, browsers, and Cloudflare Workers without external dependencies.
 
 ## Features
