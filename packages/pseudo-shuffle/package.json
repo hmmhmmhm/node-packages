@@ -1,6 +1,6 @@
 {
   "name": "pseudo-shuffle",
-  "version": "1.1.0",
+  "version": "1.1.1",
   "description": "Make the index look like it is shuffled according to the range so that it is not conflicted without the actual shuffle. Works in both Node.js and browser environments.",
   "type": "module",
   "source": "src/pseudo-shuffle.ts",

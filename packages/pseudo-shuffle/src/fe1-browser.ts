@@ -27,11 +27,22 @@ function encode(long: bigint): Uint8Array {
 }
 
 function toBeBytes(num: number | bigint): Uint8Array {
+  // Ensure num is a valid integer before converting to BigInt
+  if (typeof num === 'number') {
+    if (!Number.isFinite(num) || !Number.isInteger(num)) {
+      throw new Error(`Invalid number for BigInt conversion: ${num}`);
+    }
+  }
   return toBufferBE(BigInt(num), 8);
 }
 
 function assureBigInt(n: number | bigint): bigint {
   if (typeof n === 'bigint') return n;
+  if (typeof n === 'number') {
+    if (!Number.isFinite(n) || !Number.isInteger(n)) {
+      throw new Error(`Invalid number for BigInt conversion: ${n}`);
+    }
+  }
   return BigInt(n);
 }
 

@@ -41,6 +41,20 @@ export const encode = async ({
   privateKey = defaultKey,
   publicKey = defaultKey,
 }: IPsuedoShuffleOption): Promise<number> => {
+  // Validate inputs
+  if (!Number.isFinite(index) || !Number.isInteger(index)) {
+    throw new Error(`Invalid index: ${index}. Must be a finite integer.`);
+  }
+  if (!Number.isFinite(min) || !Number.isInteger(min)) {
+    throw new Error(`Invalid min: ${min}. Must be a finite integer.`);
+  }
+  if (!Number.isFinite(max) || !Number.isInteger(max)) {
+    throw new Error(`Invalid max: ${max}. Must be a finite integer.`);
+  }
+  if (min >= max) {
+    throw new Error(`Invalid range: min (${min}) must be less than max (${max}).`);
+  }
+
   // Algorithm can be applied only when the difference
   // between the min and max values is at least 4.
   if (max - min < 3) return index;
@@ -77,6 +91,20 @@ export const decode = async ({
   privateKey = defaultKey,
   publicKey = defaultKey,
 }: IPsuedoShuffleOption): Promise<number> => {
+  // Validate inputs
+  if (!Number.isFinite(index) || !Number.isInteger(index)) {
+    throw new Error(`Invalid index: ${index}. Must be a finite integer.`);
+  }
+  if (!Number.isFinite(min) || !Number.isInteger(min)) {
+    throw new Error(`Invalid min: ${min}. Must be a finite integer.`);
+  }
+  if (!Number.isFinite(max) || !Number.isInteger(max)) {
+    throw new Error(`Invalid max: ${max}. Must be a finite integer.`);
+  }
+  if (min >= max) {
+    throw new Error(`Invalid range: min (${min}) must be less than max (${max}).`);
+  }
+
   // Algorithm can be applied only when the difference
   // between the min and max values is at least 4.
   if (max - min < 3) return index;
