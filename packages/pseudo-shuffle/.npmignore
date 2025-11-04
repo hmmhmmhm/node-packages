@@ -1,2 +1,7 @@
 node_modules
 .DS_Store
+test
+src
+tsconfig.json
+jest.config.cjs
+*.log
