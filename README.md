@@ -9,6 +9,10 @@ Personal research packages by hmmhmmhm - A collection of useful TypeScript/JavaS
 ### [biggest](./packages/biggest)
 Tiny 2kb, zero deps, infinite precision library for safe and precise arithmetic operations on Big Integer and Big Decimal.
 
+[![Biggest](https://hmart.app/ko/biggest/og.png)](https://hmart.app/ko/biggest)
+
+**[🔗 Showcase and Introduction Page](https://hmart.app/ko/biggest)**
+
 ### [pseudo-shuffle](./packages/pseudo-shuffle)
 Make the index look like it is shuffled according to the range without actual shuffling - deterministic pseudo-random shuffling.
 
