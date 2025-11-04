@@ -12,6 +12,10 @@ Tiny 2kb, zero deps, infinite precision library for safe and precise arithmetic 
 ### [pseudo-shuffle](./packages/pseudo-shuffle)
 Make the index look like it is shuffled according to the range without actual shuffling - deterministic pseudo-random shuffling.
 
+[![Pseudo Shuffle](https://hmart.app/ko/pseudo-shuffle/og.png)](https://hmart.app/ko/pseudo-shuffle)
+
+**[🔗 Showcase and Introduction Page](https://hmart.app/ko/pseudo-shuffle)**
+
 ### [edge-crypto](./packages/edge-crypto)
 Unified SubtleCrypto utilities for Node.js, browsers, and Cloudflare Workers without external dependencies.
 
