@@ -1,20 +1,27 @@
 {
   "name": "pseudo-shuffle",
-  "version": "1.0.4",
-  "description": "Make the index look like it is shuffled according to the range so that it is not conflicted without the actual shuffle.",
+  "version": "1.1.0",
+  "description": "Make the index look like it is shuffled according to the range so that it is not conflicted without the actual shuffle. Works in both Node.js and browser environments.",
   "type": "module",
   "source": "src/pseudo-shuffle.ts",
   "exports": {
-    "require": "./dist/pseudo-shuffle.cjs",
-    "default": "./dist/pseudo-shuffle.modern.js"
+    "node": {
+      "require": "./dist/pseudo-shuffle.cjs",
+      "default": "./dist/pseudo-shuffle.modern.js"
+    },
+    "browser": "./dist/pseudo-shuffle-browser.modern.js",
+    "default": "./dist/pseudo-shuffle-browser.modern.js"
   },
   "main": "./dist/pseudo-shuffle.cjs",
   "module": "./dist/pseudo-shuffle.module.js",
-  "unpkg": "./dist/pseudo-shuffle.umd.js",
+  "browser": "./dist/pseudo-shuffle-browser.modern.js",
+  "unpkg": "./dist/pseudo-shuffle-browser.umd.js",
   "types": "./dist/pseudo-shuffle.d.ts",
   "scripts": {
-    "build": "microbundle",
-    "test": "microbundle && jest"
+    "build": "npm run build:node && npm run build:browser",
+    "build:node": "microbundle --tsconfig tsconfig.json",
+    "build:browser": "microbundle src/pseudo-shuffle-browser.ts -o dist/pseudo-shuffle-browser.js --tsconfig tsconfig.json",
+    "test": "npm run build && jest"
   },
   "repository": {
     "type": "git",
@@ -26,6 +33,9 @@
     "shuffle-algorithms",
     "fpe",
     "format-preserving-encryption",
+    "browser",
+    "browser-compatible",
+    "web-crypto",
     "ems",
     "cjs",
     "umd",
