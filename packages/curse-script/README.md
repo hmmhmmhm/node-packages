@@ -1,8 +1,10 @@
 # Curse Script
 
-[![Curse Script](https://hmart.app/en/curse-script/og.png)](https://hmart.app/en/curse-script)
+[![Wiki](https://img.shields.io/badge/📖_Wiki-deepwiki-blue)](https://deepwiki.com/hmmhmmhm/node-packages)
 
-**[🔗 Showcase and Introduction Page](https://hmart.app/en/curse-script)**
+[![Curse Script](https://hmart.app/en/curse-script/og.png)](https://hmart.app/curse-script)
+
+**[🔗 Showcase and Introduction Page](https://hmart.app/curse-script)**
 
 A JavaScript obfuscator that converts code into cursed spell-like syntax.
 

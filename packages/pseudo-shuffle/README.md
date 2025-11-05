@@ -1,11 +1,10 @@
 # 🔀 pseudo-shuffle
 
 [![Wiki](https://img.shields.io/badge/📖_Wiki-deepwiki-blue)](https://deepwiki.com/hmmhmmhm/node-packages)
-[![Actual Image](https://i.imgur.com/w1Iz3h1.png)](https://i.imgur.com/w1Iz3h1.png)
 
-[![Pseudo Shuffle](https://hmart.app/ko/pseudo-shuffle/og.png)](https://hmart.app/ko/pseudo-shuffle)
+[![Pseudo Shuffle](https://hmart.app/en/pseudo-shuffle/og.png)](https://hmart.app/pseudo-shuffle)
 
-**[🔗 Showcase and Introduction Page](https://hmart.app/ko/pseudo-shuffle)**
+**[🔗 Showcase and Introduction Page](https://hmart.app/pseudo-shuffle)**
 
 > 📜 Make the index look like it is shuffled according to the range so that it is not conflicted without the actual shuffle.
 

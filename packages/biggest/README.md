@@ -1,11 +1,10 @@
 # 🔢 biggest
 
 [![Wiki](https://img.shields.io/badge/📖_Wiki-deepwiki-blue)](https://deepwiki.com/hmmhmmhm/node-packages)
-[![Poster Image](https://i.imgur.com/fxsy1HD.png)](https://i.imgur.com/fxsy1HD.png)
 
-[![Biggest](https://hmart.app/ko/biggest/og.png)](https://hmart.app/ko/biggest)
+[![Biggest](https://hmart.app/en/biggest/og.png)](https://hmart.app/biggest)
 
-**[🔗 Showcase and Introduction Page](https://hmart.app/ko/biggest)**
+**[🔗 Showcase and Introduction Page](https://hmart.app/biggest)**
 
 > Tiny 2kb, zero deps, infinite precision: Biggest for all your big integer + big decimal needs.
 

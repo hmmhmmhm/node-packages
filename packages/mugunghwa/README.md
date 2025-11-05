@@ -2,9 +2,9 @@
 
 [![Wiki](https://img.shields.io/badge/📖_Wiki-deepwiki-blue)](https://deepwiki.com/hmmhmmhm/node-packages)
 
-[![Mugunghwa](https://hmart.app/ko/mugunghwa/og.png)](https://hmart.app/ko/mugunghwa)
+[![Mugunghwa](https://hmart.app/en/mugunghwa/og.png)](https://hmart.app/mugunghwa)
 
-**[🔗 쇼케이스 및 소개 페이지 보기](https://hmart.app/ko/mugunghwa)**
+**[🔗 쇼케이스 및 소개 페이지 보기](https://hmart.app/mugunghwa)**
 
 > 한글 기반 72진법 인코딩 라이브러리
 

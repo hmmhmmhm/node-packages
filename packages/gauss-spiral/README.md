@@ -2,9 +2,9 @@
 
 [![Wiki](https://img.shields.io/badge/📖_Wiki-deepwiki-blue)](https://deepwiki.com/hmmhmmhm/node-packages)
 
-[![Gauss Spiral](https://hmart.app/ko/gauss-spiral/og.png)](https://hmart.app/ko/gauss-spiral)
+[![Gauss Spiral](https://hmart.app/en/gauss-spiral/og.png)](https://hmart.app/gauss-spiral)
 
-**[🔗 Showcase and Introduction Page](https://hmart.app/ko/gauss-spiral)**
+**[🔗 Showcase and Introduction Page](https://hmart.app/gauss-spiral)**
 
 Fill a circle with dots from the center out — efficiently. Compute `(x, y) ↔ n` for very large cases fast (binary search + `O(√m)` counting, `O(log m)` search) with a simple, plug-and-play API — no math background needed.
 
