@@ -1,0 +1,17 @@
+# Source files
+src/
+test/
+examples/
+
+# Config files
+tsconfig.json
+jest.config.js
+.gitignore
+
+# Development files
+*.log
+.DS_Store
+node_modules/
+
+# CI/CD
+.github/

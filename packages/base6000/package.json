@@ -5,21 +5,28 @@
   "description": "Base-6000 encoding/decoding using 6000 English words. Perfect for URL shortening, OTP codes, and memorable identifiers.",
   "source": "src/index.ts",
   "exports": {
-    "types": "./dist/index.d.ts",
+    "types": "./dist/src/index.d.ts",
     "require": "./dist/index.cjs",
     "default": "./dist/index.modern.js"
   },
   "main": "./dist/index.cjs",
   "module": "./dist/index.modern.js",
-  "types": "./dist/index.d.ts",
+  "types": "./dist/src/index.d.ts",
   "bin": {
     "base6000": "./dist/cli.cjs"
   },
+  "files": [
+    "dist",
+    "english.json",
+    "README.md",
+    "LICENSE"
+  ],
   "scripts": {
     "build": "microbundle && microbundle src/cli.ts -o dist/cli.cjs --no-pkg-main -f cjs",
     "watch": "microbundle watch",
     "test": "jest",
-    "release": "release-it"
+    "release": "release-it",
+    "prepublishOnly": "pnpm run build && pnpm run test"
   },
   "keywords": [
     "base6000",
