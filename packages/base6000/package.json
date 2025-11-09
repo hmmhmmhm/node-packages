@@ -1,0 +1,76 @@
+{
+  "name": "base6000",
+  "type": "module",
+  "version": "0.0.1",
+  "description": "Base-6000 encoding/decoding using 6000 English words. Perfect for URL shortening, OTP codes, and memorable identifiers.",
+  "source": "src/index.ts",
+  "exports": {
+    "types": "./dist/index.d.ts",
+    "require": "./dist/index.cjs",
+    "default": "./dist/index.modern.js"
+  },
+  "main": "./dist/index.cjs",
+  "module": "./dist/index.modern.js",
+  "types": "./dist/index.d.ts",
+  "bin": {
+    "base6000": "./dist/cli.cjs"
+  },
+  "scripts": {
+    "build": "microbundle && microbundle src/cli.ts -o dist/cli.cjs --no-pkg-main -f cjs",
+    "watch": "microbundle watch",
+    "test": "jest",
+    "release": "release-it"
+  },
+  "keywords": [
+    "base6000",
+    "encoding",
+    "decoding",
+    "url-shortening",
+    "otp",
+    "base-conversion",
+    "numeral-system",
+    "words",
+    "memorable",
+    "identifier",
+    "hash",
+    "bigint"
+  ],
+  "author": "hmmhmmhm",
+  "license": "MIT",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/hmmhmmhm/node-packages.git",
+    "directory": "packages/base6000"
+  },
+  "bugs": {
+    "url": "https://github.com/hmmhmmhm/node-packages/issues"
+  },
+  "homepage": "https://github.com/hmmhmmhm/node-packages/tree/main/packages/base6000#readme",
+  "devDependencies": {
+    "@types/jest": "^29.5.13",
+    "@types/node": "^20.0.0",
+    "husky": "^9.1.6",
+    "jest": "^29.7.0",
+    "lint-staged": "^15.2.10",
+    "microbundle": "^0.15.1",
+    "release-it": "^19.0.5",
+    "ts-jest": "^29.2.5",
+    "typescript": "^5.6.2"
+  },
+  "husky": {
+    "hooks": {
+      "pre-commit": "lint-staged"
+    }
+  },
+  "release-it": {
+    "hooks": {
+      "before:init": "pnpm run build"
+    }
+  },
+  "lint-staged": {
+    "*.ts": [
+      "pnpm run lint",
+      "prettier --write"
+    ]
+  }
+}
