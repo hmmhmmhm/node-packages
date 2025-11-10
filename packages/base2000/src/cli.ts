@@ -22,6 +22,7 @@ Commands:
 Options:
   --separator <sep>  Custom separator for encoding (default: none)
                      For decoding, specify if emojis are separated
+                     Recommended: Use space separator for reliable copy/paste
   -h, --help         Show this help message
 
 Examples:
@@ -29,6 +30,14 @@ Examples:
   base2000 encode 123456 --separator " "
   base2000 decode 🤮😌
   base2000 decode "😀 😁 😂" --separator " "
+
+Note:
+  When copy/pasting emojis from terminal, multi-codepoint emojis (with skin
+  tones, flags, etc.) may get corrupted. For reliable copy/paste, use:
+    base2000 encode <number> --separator " "
+  Or redirect output to a file:
+    base2000 encode <number> > encoded.txt
+    base2000 decode "$(cat encoded.txt)"
 `);
 }
 
@@ -82,7 +91,17 @@ function main() {
       process.exit(1);
     }
   } catch (error) {
-    console.error(`Error: ${error instanceof Error ? error.message : String(error)}`);
+    const errorMsg = error instanceof Error ? error.message : String(error);
+    console.error(`Error: ${errorMsg}`);
+    
+    // Provide helpful hint for common copy/paste issues
+    if (errorMsg.includes('Invalid emoji')) {
+      console.error('\nHint: If you copied emojis from terminal output, they may be corrupted.');
+      console.error('Try using --separator " " when encoding, or redirect to a file:');
+      console.error('  base2000 encode <number> --separator " "');
+      console.error('  base2000 encode <number> > encoded.txt');
+    }
+    
     process.exit(1);
   }
 }

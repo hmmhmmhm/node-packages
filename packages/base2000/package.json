@@ -5,15 +5,15 @@
   "description": "Base-2000 encoding/decoding using 2000 emojis. Perfect for URL shortening, OTP codes, and memorable identifiers.",
   "source": "src/index.ts",
   "exports": {
-    "types": "./dist/src/index.d.ts",
+    "types": "./dist/src/src/index.d.ts",
     "require": "./dist/index.cjs",
     "default": "./dist/index.modern.js"
   },
   "main": "./dist/index.cjs",
   "module": "./dist/index.modern.js",
-  "types": "./dist/src/index.d.ts",
+  "types": "./dist/src/src/index.d.ts",
   "bin": {
-    "base2000": "./dist/cli.cjs"
+    "base2000": "dist/cli.cjs"
   },
   "files": [
     "dist",
@@ -25,7 +25,6 @@
     "build": "microbundle && microbundle src/cli.ts -o dist/cli.cjs --no-pkg-main -f cjs",
     "watch": "microbundle watch",
     "test": "jest",
-    "generate-emojis": "node scripts/generate-emojis.js",
     "release": "release-it",
     "prepublishOnly": "pnpm run build && pnpm run test"
   },
@@ -55,6 +54,9 @@
     "url": "https://github.com/hmmhmmhm/node-packages/issues"
   },
   "homepage": "https://github.com/hmmhmmhm/node-packages/tree/main/packages/base2000#readme",
+  "dependencies": {
+    "biggest": "workspace:*"
+  },
   "devDependencies": {
     "@types/jest": "^29.5.13",
     "@types/node": "^20.0.0",

@@ -23,6 +23,10 @@ importers:
         version: 5.9.2
 
   packages/base2000:
+    dependencies:
+      biggest:
+        specifier: workspace:*
+        version: link:../biggest
     devDependencies:
       '@types/jest':
         specifier: ^29.5.13
