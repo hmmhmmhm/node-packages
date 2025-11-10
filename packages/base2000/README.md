@@ -2,31 +2,31 @@
 
 A base-N encoding/decoding library using colorful emojis. Convert numbers to memorable emoji sequences.
 
-**Note**: This package uses 2,214 carefully selected colorful emojis that render properly across all platforms. Only emojis that display in full color (not undefined codepoints) are included.
+**Note**: This package uses 2,000 carefully selected colorful emojis that render properly across all platforms. Only emojis that display in full color (not undefined codepoints) are included.
 
 ## Encoding Capacity
 
-The number of unique values that can be represented grows exponentially with the number of emojis (Base: 2,214):
+The number of unique values that can be represented grows exponentially with the number of emojis (Base: 2,000):
 
 | Emojis | Possible Combinations | Equivalent Bits |
 |--------|----------------------|-----------------|
-| 1 Emoji    | 2,214 | ~11.11 bits     |
-| 2 Emojis   | 4.90 Million | ~22.22 bits     |
-| 3 Emojis   | 10.9 Billion | ~33.33 bits     |
-| 4 Emojis   | 24.0 Trillion | ~44.44 bits     |
-| 5 Emojis   | 53.2 Quadrillion | ~55.55 bits     |
-| 6 Emojis   | 118 Quintillion | ~66.66 bits     |
-| 7 Emojis   | 261 Sextillion | ~77.77 bits     |
-| 8 Emojis   | 577 Octillion | ~88.88 bits     |
-| 9 Emojis   | 1.28 Nonillion | ~100.00 bits    |
-| 10 Emojis  | 2.83 Decillion | ~111.11 bits    |
-| 11 Emojis  | 6.26 Undecillion | ~122.22 bits    |
-| 12 Emojis  | 13.9 Duodecillion | ~133.33 bits    |
+| 1 Emoji    | 2,000 | ~10.97 bits     |
+| 2 Emojis   | 4.00 Million | ~21.93 bits     |
+| 3 Emojis   | 8.00 Billion | ~32.90 bits     |
+| 4 Emojis   | 16.0 Trillion | ~43.86 bits     |
+| 5 Emojis   | 32.0 Quadrillion | ~54.83 bits     |
+| 6 Emojis   | 64.0 Quintillion | ~65.79 bits     |
+| 7 Emojis   | 128 Sextillion | ~76.76 bits     |
+| 8 Emojis   | 256 Octillion | ~87.72 bits     |
+| 9 Emojis   | 512 Nonillion | ~98.69 bits    |
+| 10 Emojis  | 1.02 Decillion | ~109.66 bits    |
+| 11 Emojis  | 2.05 Undecillion | ~120.62 bits    |
+| 12 Emojis  | 4.10 Duodecillion | ~131.59 bits    |
 
 ### Encoding Examples
 
 ```bash
-npx base2000 encode 2214
+npx base2000 encode 2000
 # Output: 😁😀
 
 npx base2000 encode 38557435
@@ -101,7 +101,7 @@ Encode a number to base-2000 emoji representation.
 
 ```typescript
 encode(0);                // '😀'
-encode(2214);             // '😁😀'
+encode(2000);             // '😁😀'
 encode(123456);           // '😲🚶🏽'
 encode(123456, ' ');      // '😲 🚶🏽' (custom separator)
 
@@ -120,7 +120,7 @@ Decode a base-2000 emoji representation back to a number.
 
 ```typescript
 decode('😀');             // 0n
-decode('😁😀');           // 2214n
+decode('😁😀');           // 2000n
 decode('😲🚶🏽');         // 123456n
 
 // With separator
@@ -130,7 +130,7 @@ decode('😲-🚶🏽', '-');   // 123456n
 
 ### `getEmoji(index: number): string`
 
-Get the emoji at a specific index (0-2213).
+Get the emoji at a specific index (0-1999).
 
 ```typescript
 getEmoji(0);              // '😀'
@@ -154,7 +154,7 @@ getEmojiIndex('unknown'); // -1
 Get the total number of emojis in the base.
 
 ```typescript
-getBase();                // 2214
+getBase();                // 2000
 ```
 
 ## CLI Usage
@@ -265,12 +265,12 @@ Base2000 works like any positional numeral system (like binary, decimal, or hexa
 The number `123456` in base-2000:
 
 ```
-123456 ÷ 2214 = 55 remainder 1686
-55 ÷ 2214 = 0 remainder 55
+123456 ÷ 2000 = 61 remainder 1456
+61 ÷ 2000 = 0 remainder 61
 
-Reading remainders from bottom to top: [55, 1686]
-Emoji at index 55: (emoji at position 55)
-Emoji at index 1686: (emoji at position 1686)
+Reading remainders from bottom to top: [61, 1456]
+Emoji at index 61: (emoji at position 61)
+Emoji at index 1456: (emoji at position 1456)
 
 Result: (corresponding emoji sequence)
 ```
@@ -312,7 +312,7 @@ encode(-1);                    // Error: Only non-negative numbers can be encode
 encode(3.14);                  // Error: Only integers can be encoded
 decode('');                    // Error: Encoded string cannot be empty
 decode('invalid');             // Error: Invalid emoji in encoded string
-getEmoji(3000);                // Error: Index must be between 0 and 2213
+getEmoji(3000);                // Error: Index must be between 0 and 1999
 ```
 
 ## Browser Support
