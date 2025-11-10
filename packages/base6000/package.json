@@ -1,7 +1,7 @@
 {
   "name": "base6000",
   "type": "module",
-  "version": "0.0.1",
+  "version": "0.0.2",
   "description": "Base-6000 encoding/decoding using 6000 English words. Perfect for URL shortening, OTP codes, and memorable identifiers.",
   "source": "src/index.ts",
   "exports": {
@@ -79,5 +79,8 @@
       "pnpm run lint",
       "prettier --write"
     ]
+  },
+  "dependencies": {
+    "biggest": "workspace:*"
   }
 }

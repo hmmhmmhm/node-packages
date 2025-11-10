@@ -1,4 +1,5 @@
 import words from '../english.json';
+import { utils, divide as bigDivide, multiply as bigMultiply, add as bigAdd, mod as bigMod, compare as bigCompare, floor as bigFloor } from 'biggest';
 
 /**
  * Base6000 encoder/decoder using English words
@@ -6,6 +7,7 @@ import words from '../english.json';
  */
 
 const BASE = 6000;
+const BASE_STR = '6000';
 const WORDS: string[] = words;
 
 // Create reverse lookup map for decoding
@@ -13,6 +15,28 @@ const WORD_TO_INDEX = new Map<string, number>();
 WORDS.forEach((word, index) => {
   WORD_TO_INDEX.set(word.toLowerCase(), index);
 });
+
+// Threshold for switching to biggest module (around 10^100)
+// BigInt can handle much larger numbers, but operations become slow
+// We use string length as a proxy for size to avoid BigInt exponentiation issues
+const BIGINT_THRESHOLD_LENGTH = 100;
+
+/**
+ * Check if a bigint is too large for efficient BigInt operations
+ */
+function shouldUseBiggest(n: bigint): boolean {
+  const str = n.toString();
+  const cleaned = str.replace(/^-/, '');
+  return cleaned.length > BIGINT_THRESHOLD_LENGTH;
+}
+
+/**
+ * Check if a string representation of a number is too large
+ */
+function isStringTooLarge(str: string): boolean {
+  const cleaned = str.replace(/^-/, '');
+  return cleaned.length > BIGINT_THRESHOLD_LENGTH;
+}
 
 /**
  * Encode a number or bigint to base-6000 word representation
@@ -58,12 +82,33 @@ export function encode(num: number | bigint | string, separator: string = '-'): 
     return WORDS[0];
   }
 
-  const result: string[] = [];
+  // Determine if we should use biggest module
+  const useBiggest = shouldUseBiggest(n);
+  const numStr = n.toString();
   
-  while (n > 0n) {
-    const remainder = Number(n % BigInt(BASE));
-    result.unshift(WORDS[remainder]);
-    n = n / BigInt(BASE);
+  const result: string[] = [];
+
+  if (useBiggest) {
+    // Use biggest module for very large numbers
+    let num = numStr;
+    
+    while (bigCompare(num, '0') > 0) {
+      const remainder = bigMod(num, BASE_STR);
+      const remainderNum = parseInt(remainder);
+      result.unshift(WORDS[remainderNum]);
+      // Integer division: divide with sufficient precision then floor
+      // Use precision of 20 which is enough for accurate integer division
+      num = bigFloor(bigDivide(num, BASE_STR, 20));
+    }
+  } else {
+    // Use BigInt for smaller numbers (faster)
+    let num = n;
+    
+    while (num > 0n) {
+      const remainder = Number(num % BigInt(BASE));
+      result.unshift(WORDS[remainder]);
+      num = num / BigInt(BASE);
+    }
   }
 
   return result.join(separator);
@@ -105,19 +150,46 @@ export function decode(encoded: string, separator?: string): bigint {
     wordList = normalized.split(/[^a-z0-9]+/).filter(w => w.length > 0);
   }
   
-  let result = 0n;
+  // Estimate if result will be large based on number of words
+  // Each word represents log(6000) ≈ 3.78 decimal digits
+  // So 27 words ≈ 102 digits (above threshold)
+  const estimatedDigits = wordList.length * 3.78;
+  const useBiggest = estimatedDigits > 90; // Use threshold slightly below 100 for safety
+  
+  if (useBiggest) {
+    // Use biggest module for very large results
+    let result = '0';
 
-  for (const word of wordList) {
-    const index = WORD_TO_INDEX.get(word);
-    
-    if (index === undefined) {
-      throw new Error(`Invalid word in encoded string: "${word}"`);
+    for (const word of wordList) {
+      const index = WORD_TO_INDEX.get(word);
+
+      if (index === undefined) {
+        throw new Error(`Invalid word in encoded string: "${word}"`);
+      }
+
+      // result = result * BASE + index
+      result = bigMultiply(result, BASE_STR);
+      result = bigAdd(result, index.toString());
     }
 
-    result = result * BigInt(BASE) + BigInt(index);
-  }
+    // Convert back to BigInt for return
+    return BigInt(result);
+  } else {
+    // Use BigInt for smaller results (faster)
+    let result = 0n;
 
-  return result;
+    for (const word of wordList) {
+      const index = WORD_TO_INDEX.get(word);
+      
+      if (index === undefined) {
+        throw new Error(`Invalid word in encoded string: "${word}"`);
+      }
+
+      result = result * BigInt(BASE) + BigInt(index);
+    }
+
+    return result;
+  }
 }
 
 /**
