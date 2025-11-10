@@ -1,7 +1,7 @@
 {
   "name": "base2000",
   "type": "module",
-  "version": "0.0.1",
+  "version": "0.0.2",
   "description": "Base-2000 encoding/decoding using 2000 emojis. Perfect for URL shortening, OTP codes, and memorable identifiers.",
   "source": "src/index.ts",
   "exports": {
