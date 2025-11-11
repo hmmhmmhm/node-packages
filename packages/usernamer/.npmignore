@@ -1,0 +1,8 @@
+src/
+test/
+tsconfig.json
+jest.config.js
+*.test.ts
+.gitignore
+.DS_Store
+coverage/

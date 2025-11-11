@@ -1,0 +1,66 @@
+{
+  "name": "usernamer",
+  "type": "module",
+  "version": "0.0.1",
+  "description": "Generate memorable usernames from numbers using multi-level word combinations in Korean and English",
+  "source": "src/index.ts",
+  "exports": {
+    ".": {
+      "types": "./dist/src/src/index.d.ts",
+      "require": "./dist/index.cjs",
+      "default": "./dist/index.modern.js"
+    },
+    "./ko": {
+      "types": "./dist/src/src/ko.d.ts",
+      "default": "./dist/ko/usernamer.js"
+    }
+  },
+  "main": "./dist/index.cjs",
+  "module": "./dist/index.modern.js",
+  "types": "./dist/src/src/index.d.ts",
+  "bin": {
+    "usernamer": "dist/cli.cjs"
+  },
+  "files": [
+    "dist",
+    "data",
+    "README.md",
+    "LICENSE"
+  ],
+  "scripts": {
+    "build": "microbundle && microbundle src/ko.ts -o dist/ko --no-pkg-main && microbundle src/cli.ts -o dist/cli.cjs --no-pkg-main -f cjs",
+    "watch": "microbundle watch",
+    "test": "jest",
+    "prepublishOnly": "pnpm run build && pnpm run test"
+  },
+  "keywords": [
+    "username",
+    "generator",
+    "nickname",
+    "encoding",
+    "decoding",
+    "korean",
+    "english",
+    "memorable",
+    "identifier"
+  ],
+  "author": "hmmhmmhm",
+  "license": "MIT",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/hmmhmmhm/node-packages.git",
+    "directory": "packages/usernamer"
+  },
+  "bugs": {
+    "url": "https://github.com/hmmhmmhm/node-packages/issues"
+  },
+  "homepage": "https://github.com/hmmhmmhm/node-packages/tree/main/packages/usernamer#readme",
+  "devDependencies": {
+    "@types/jest": "^29.5.13",
+    "@types/node": "^20.0.0",
+    "jest": "^29.7.0",
+    "microbundle": "^0.15.1",
+    "ts-jest": "^29.2.5",
+    "typescript": "^5.6.2"
+  }
+}
