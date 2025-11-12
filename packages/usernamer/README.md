@@ -29,13 +29,36 @@ You can use the CLI to quickly test encoding and decoding (default language: Eng
 
 ```bash
 # Encode a number to username (default: English)
-npx usernamer encode 12345
-# Output: wearing hat calm bumblebee
+npx usernamer encode -l en 0
+# Output: alpaca
+
+npx usernamer encode -l en 100
+# Output: adorable alpaca
+
+npx usernamer encode -l en 10000
+# Output: wearing hat alpaca
+
+npx usernamer encode -l en 1000000
+# Output: sunny day alpaca
+
+npx usernamer encode -l en 10000000
+# Output: winter day alpaca
 
 # Encode with Korean
-npx usernamer encode 12345 --language korean
-npx usernamer encode 12345 -l ko
-# Output: 모자를 쓴 평온한 웰시코기
+npx usernamer encode -l ko 0
+# Output: 알파카
+
+npx usernamer encode -l ko 100
+# Output: 귀여운 알파카
+
+npx usernamer encode -l ko 10000
+# Output: 모자를 쓴 알파카
+
+npx usernamer encode -l ko 1000000
+# Output: 맑은 날 알파카
+
+npx usernamer encode -l ko 10000000
+# Output: 겨울날의 알파카
 
 # Decode a username back to number
 npx usernamer decode "adorable alpaca"
@@ -67,11 +90,13 @@ encode(0);           // "alpaca"
 encode(100);         // "adorable alpaca"
 encode(10000);       // "wearing hat alpaca"
 encode(1000000);     // "sunny day alpaca"
+encode(10000000);    // "winter day alpaca"
 
 // Decode usernames back to numbers
 decode("alpaca");                // 0
 decode("adorable alpaca");       // 100
 decode("sunny day alpaca");      // 1000000
+decode("winter day alpaca");     // 10000000
 ```
 
 ### Korean Support
@@ -84,11 +109,13 @@ encode(0);           // "알파카"
 encode(100);         // "귀여운 알파카"
 encode(10000);       // "모자를 쓴 알파카"
 encode(1000000);     // "맑은 날 알파카"
+encode(10000000);    // "겨울날의 알파카"
 
 // Decode
 decode("알파카");                // 0
 decode("귀여운 알파카");          // 100
 decode("맑은 날 알파카");        // 1000000
+decode("겨울날의 알파카");       // 10000000
 ```
 
 **Bundle Size:**
