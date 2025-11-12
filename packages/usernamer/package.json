@@ -1,7 +1,7 @@
 {
   "name": "usernamer",
   "type": "module",
-  "version": "0.0.1",
+  "version": "1.0.0",
   "description": "Generate memorable usernames from numbers using multi-level word combinations in Korean and English",
   "source": "src/index.ts",
   "exports": {
