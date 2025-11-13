@@ -1,7 +1,7 @@
 {
   "name": "gauss-spiral",
   "type": "module",
-  "version": "1.0.0",
+  "version": "1.0.1",
   "description": "A library for converting between coordinates and indices using the Gauss spiral algorithm",
   "source": "src/index.ts",
   "exports": {
