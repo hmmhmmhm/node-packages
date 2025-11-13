@@ -135,3 +135,10 @@ function isAngleGreater(px: number, py: number, x: number, y: number): boolean {
   if (atan2A === atan2B) return false;
   return atan2A > atan2B;
 }
+
+// Export spherical coordinate utilities
+export {
+  calculateCoordinateDiff,
+  reconstructCoordinateDiff,
+  DEG_PER_METER,
+} from "./spherical";

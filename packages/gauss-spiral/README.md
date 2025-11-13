@@ -96,6 +96,8 @@ npm install gauss-spiral
 
 ## Usage
 
+### Gauss Spiral Coordinates
+
 ```typescript
 import { getNFromCoordinates, getCoordinates } from 'gauss-spiral';
 
@@ -107,6 +109,52 @@ console.log(n); // e.g. 47 (depends on the spiral's ordering)
 const coords = getCoordinates(10);
 console.log(coords); // { x: number, y: number }
 ```
+
+### Spherical Coordinate Grid System
+
+The library also provides utilities for converting geographic coordinates (latitude/longitude) into a grid-based diff system, useful for spatial indexing and proximity calculations.
+
+```typescript
+import {
+  calculateCoordinateDiff,
+  reconstructCoordinateDiff,
+  DEG_PER_METER,
+} from 'gauss-spiral';
+
+// Define a center point (e.g., Seoul, South Korea)
+const center = { lat: 37.5665, lng: 126.978 };
+
+// Define a target location
+const target = { lat: 37.5695, lng: 126.981 };
+
+// Convert to grid diff with 3-meter precision
+const diff = calculateCoordinateDiff({
+  center,
+  target,
+  precisionMeters: 3,
+});
+console.log(diff); // { lat: 111, lng: 237 } (approximate grid indices)
+
+// Reconstruct the original coordinates from the diff
+const reconstructed = reconstructCoordinateDiff({
+  center,
+  diff,
+  precisionMeters: 3,
+});
+console.log(reconstructed); // Close to original target coordinates
+
+// Use with Gauss spiral for radial proximity search
+const spiralN = getNFromCoordinates(diff.lat, diff.lng);
+console.log(spiralN); // Priority index for this location
+```
+
+**Use cases for spherical coordinate utilities:**
+
+- **Geospatial indexing**: Convert lat/lng to integer grid indices for efficient spatial queries
+- **Proximity search**: Combine with Gauss spiral to prioritize locations by distance from center
+- **Map tile systems**: Create custom grid systems with configurable precision
+- **Location-based services**: Implement radius-based searches and nearest-neighbor queries
+- **Geohashing alternative**: Simple grid-based spatial indexing without external dependencies
 
 ## What this is
 
@@ -128,7 +176,9 @@ console.log(coords); // { x: number, y: number }
 
 ## API
 
-### `getNFromCoordinates(x: number, y: number): number`
+### Gauss Spiral Functions
+
+#### `getNFromCoordinates(x: number, y: number): number`
 
 Returns the 1-based visit index `n` of `(x, y)` in the spiral enumeration.
 
@@ -138,7 +188,7 @@ Returns the 1-based visit index `n` of `(x, y)` in the spiral enumeration.
 
 **Returns:** The index `n (≥ 1)`
 
-### `getCoordinates(n: number): { x: number; y: number }`
+#### `getCoordinates(n: number): { x: number; y: number }`
 
 Returns the lattice coordinate visited at step `n`.
 
@@ -148,6 +198,56 @@ Returns the lattice coordinate visited at step `n`.
 **Returns:** `{ x, y }`
 
 **Throws:** Error if n <= 0
+
+### Spherical Coordinate Functions
+
+#### `calculateCoordinateDiff(options): { lat: number; lng: number }`
+
+Converts a target coordinate to a grid diff based on a reference center coordinate. Useful for creating a grid-based spatial indexing system.
+
+**Parameters:**
+- `options.center` - The reference coordinate `{ lat: number, lng: number }`
+- `options.target` - The target coordinate to convert `{ lat: number, lng: number }`
+- `options.precisionMeters` - (Optional) The precision in meters for the conversion. Default: `3`
+- `options.degreePerMeter` - (Optional) Conversion factor from meters to degrees. Default: `111000`
+
+**Returns:** `{ lat: number, lng: number }` - The calculated grid diff for latitude and longitude
+
+**Example:**
+```typescript
+const diff = calculateCoordinateDiff({
+  center: { lat: 37.5665, lng: 126.978 },
+  target: { lat: 37.5695, lng: 126.981 },
+  precisionMeters: 3,
+});
+```
+
+#### `reconstructCoordinateDiff(options): { lat: number; lng: number }`
+
+Converts a grid diff back into a coordinate based on a reference center coordinate. This reverses the operation done by `calculateCoordinateDiff`.
+
+**Parameters:**
+- `options.center` - The reference coordinate `{ lat: number, lng: number }`
+- `options.diff` - The grid diff representing the position `{ lat: number, lng: number }`
+- `options.precisionMeters` - (Optional) The precision in meters used in the conversion. Default: `3`
+- `options.degreePerMeter` - (Optional) Conversion factor from meters to degrees. Default: `111000`
+
+**Returns:** `{ lat: number, lng: number }` - The calculated target coordinate
+
+**Example:**
+```typescript
+const reconstructed = reconstructCoordinateDiff({
+  center: { lat: 37.5665, lng: 126.978 },
+  diff: { lat: 111, lng: 237 },
+  precisionMeters: 3,
+});
+```
+
+#### `DEG_PER_METER`
+
+Constant representing the approximate conversion factor from degrees to meters. Approximately 111,000 meters corresponds to 1 degree of latitude.
+
+**Value:** `111000`
 
 ## Performance notes
 
