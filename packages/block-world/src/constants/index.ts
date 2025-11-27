@@ -12,7 +12,7 @@ export const MOVE_SPEED = 5
 export const FLY_SPEED = 10
 export const MOUSE_SENSITIVITY = 0.002
 export const WATER_LEVEL = 12
-export const TREE_DENSITY = 0.02
+export const TREE_DENSITY = 0.08
 
 export const BlockNames: Record<BlockType, string> = {
   [BlockType.AIR]: 'Air',
