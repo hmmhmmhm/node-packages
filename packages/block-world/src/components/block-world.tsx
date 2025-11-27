@@ -5,13 +5,14 @@ import { RenderPass } from 'three/examples/jsm/postprocessing/RenderPass.js'
 import { UnrealBloomPass } from 'three/examples/jsm/postprocessing/UnrealBloomPass.js'
 import { SAOPass } from 'three/examples/jsm/postprocessing/SAOPass.js'
 import { OutputPass } from 'three/examples/jsm/postprocessing/OutputPass.js'
+import { Lensflare, LensflareElement } from 'three/examples/jsm/objects/Lensflare.js'
 import { Player, Inventory, ChunkMeshData } from '../types'
 import { BlockType } from '../types'
 import { CHUNK_SIZE, CHUNK_HEIGHT, PLAYER_HEIGHT, MOUSE_SENSITIVITY, RENDER_DISTANCE, BlockHardness } from '../constants'
 import { WorldGenerator, getChunkKey, worldToChunk, setBlock, getChunksInRadius } from '../engine/world'
 import { buildChunkMesh, disposeMesh } from '../engine/mesh'
 import { updatePlayerPhysics, raycast } from '../engine/physics'
-import { initializeTextures } from '../utils/textures'
+import { initializeTextures, createLensflareTexture, createSunTexture } from '../utils/textures'
 import { Crosshair } from './crosshair'
 import { Hud } from './hud'
 import { StatusBar, DebugInfo } from './status-bar'
@@ -95,26 +96,39 @@ export function BlockWorld() {
     const hemiLight = new THREE.HemisphereLight(0x87ceeb, 0x8b6914, 1.0)
     scene.add(hemiLight)
 
-    // Sun Mesh with Glow
-    const sunGroup = new THREE.Group()
-    const sunGeometry = new THREE.SphereGeometry(20, 32, 32)
-    const sunMaterial = new THREE.MeshBasicMaterial({ color: 0xffffaa })
-    const sunMesh = new THREE.Mesh(sunGeometry, sunMaterial)
-    sunGroup.add(sunMesh)
+    // Sun Sprite Reference for animation
+    const sunSpriteRef = { current: null as THREE.Sprite | null }
 
-    // Glow effect (simple transparent sphere)
-    const glowGeometry = new THREE.SphereGeometry(35, 32, 32)
-    const glowMaterial = new THREE.MeshBasicMaterial({
-      color: 0xffff00,
-      transparent: true,
-      opacity: 0.3,
-      side: THREE.BackSide
+    // Sun Mesh (Sprite for soft glow)
+    const sunOffset = directionalLight.position.clone().normalize().multiplyScalar(400)
+    const sunTexture = createSunTexture()
+    const sunMaterial = new THREE.SpriteMaterial({
+      map: sunTexture,
+      color: new THREE.Color(3, 3, 3), // HDR Intensity for stable Bloom
+      blending: THREE.AdditiveBlending,
+      depthWrite: false, // Prevent z-fighting
+      depthTest: true
     })
-    const glowMesh = new THREE.Mesh(glowGeometry, glowMaterial)
-    sunGroup.add(glowMesh)
+    const sunSprite = new THREE.Sprite(sunMaterial)
+    sunSprite.scale.set(60, 60, 1) // Adjusted scale for high intensity
+    sunSprite.position.copy(sunOffset)
+    scene.add(sunSprite)
+    sunSpriteRef.current = sunSprite
 
-    sunGroup.position.copy(directionalLight.position).normalize().multiplyScalar(400)
-    scene.add(sunGroup)
+    // Lensflare
+    const textureFlare = createLensflareTexture()
+    const lensflare = new Lensflare()
+
+    // Main flare
+    lensflare.addElement(new LensflareElement(textureFlare, 500, 0, new THREE.Color(0xffffff)))
+    // Secondary flares/artifacts
+    lensflare.addElement(new LensflareElement(textureFlare, 60, 0.6))
+    lensflare.addElement(new LensflareElement(textureFlare, 70, 0.7))
+    lensflare.addElement(new LensflareElement(textureFlare, 120, 0.9))
+    lensflare.addElement(new LensflareElement(textureFlare, 70, 1.0))
+
+    lensflare.position.copy(sunOffset)
+    scene.add(lensflare)
 
     // Clouds
     const cloudCount = 150
@@ -203,9 +217,9 @@ export function BlockWorld() {
     // Bloom - Glowing effects
     const bloomPass = new UnrealBloomPass(
       new THREE.Vector2(window.innerWidth, window.innerHeight),
-      0.3,  // strength
-      0.5,  // radius
-      0.85  // threshold
+      0.4,  // strength
+      0.8,  // radius
+      0.8  // threshold
     )
     composer.addPass(bloomPass)
 
@@ -547,6 +561,12 @@ export function BlockWorld() {
       camera.rotation.order = 'YXZ'
       camera.rotation.y = player.rotation.y
       camera.rotation.x = player.rotation.x
+
+      // Sun follows camera to keep constant size/distance
+      if (sunSpriteRef.current) {
+        sunSpriteRef.current.position.copy(camera.position).add(sunOffset)
+        lensflare.position.copy(camera.position).add(sunOffset)
+      }
 
       // FPS counter
       gameState.frameCount++

@@ -611,6 +611,45 @@ export function initializeTextures() {
   textureAtlas.colorSpace = THREE.SRGBColorSpace
 }
 
+export function createLensflareTexture() {
+  const canvas = document.createElement('canvas')
+  canvas.width = 512
+  canvas.height = 512
+  const context = canvas.getContext('2d')!
+
+  // Main glow
+  const gradient = context.createRadialGradient(256, 256, 0, 256, 256, 256)
+  gradient.addColorStop(0, 'rgba(255, 255, 255, 1)')
+  gradient.addColorStop(0.2, 'rgba(255, 255, 220, 0.6)')
+  gradient.addColorStop(0.5, 'rgba(255, 255, 0, 0.1)')
+  gradient.addColorStop(1, 'rgba(0, 0, 0, 0)')
+
+  context.fillStyle = gradient
+  context.fillRect(0, 0, 512, 512)
+
+  const texture = new THREE.CanvasTexture(canvas)
+  return texture
+}
+
+export function createSunTexture() {
+  const canvas = document.createElement('canvas')
+  canvas.width = 512
+  canvas.height = 512
+  const context = canvas.getContext('2d')!
+
+  const gradient = context.createRadialGradient(256, 256, 0, 256, 256, 256)
+  gradient.addColorStop(0, 'rgba(255, 255, 255, 1)')
+  gradient.addColorStop(0.1, 'rgba(255, 255, 240, 0.9)')
+  gradient.addColorStop(0.4, 'rgba(255, 255, 220, 0.2)')
+  gradient.addColorStop(1, 'rgba(255, 255, 0, 0)')
+
+  context.fillStyle = gradient
+  context.fillRect(0, 0, 512, 512)
+
+  const texture = new THREE.CanvasTexture(canvas)
+  return texture
+}
+
 export function getTextureUV(type: BlockType, face: string) {
   const key = `${type}:${face}`
   return blockUVs[key] || blockUVs[`${BlockType.DIRT}:side`] // Default fallback
