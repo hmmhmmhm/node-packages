@@ -133,7 +133,7 @@ export function BlockWorld() {
     scene.add(lensflare)
 
     // Clouds
-    const cloudCount = 150
+    const cloudCount = 300
     const cloudGeometry = new THREE.BoxGeometry(15, 6, 15)
     const cloudMaterial = new THREE.MeshBasicMaterial({
       color: 0xffffff,
@@ -143,26 +143,44 @@ export function BlockWorld() {
     const clouds = new THREE.InstancedMesh(cloudGeometry, cloudMaterial, cloudCount * 10)
 
     const dummy = new THREE.Object3D()
-    let instanceIdx = 0
+
+    // Cloud data for animation
+    const worldWidth = 2000
+    const cloudInstances: {
+      x: number, y: number, z: number, speed: number,
+      blocks: { dx: number, dy: number, dz: number, scale: number }[]
+    }[] = []
+
     for (let i = 0; i < cloudCount; i++) {
-      const cx = (Math.random() - 0.5) * 800
+      const cx = (Math.random() - 0.5) * worldWidth
       const cy = 90 + Math.random() * 30 // Lower clouds
-      const cz = (Math.random() - 0.5) * 800
+      const cz = (Math.random() - 0.5) * worldWidth
+      const speed = (5 + Math.random() * 8) / 3 // Flowing speed
 
       const blocksInCloud = Math.floor(Math.random() * 5) + 4
+      const blocks = []
       for (let j = 0; j < blocksInCloud; j++) {
-        dummy.position.set(
-          cx + (Math.random() - 0.5) * 40,
-          cy + (Math.random() - 0.5) * 10,
-          cz + (Math.random() - 0.5) * 40
-        )
-        // Random scale for fluffiness
-        const scale = 0.8 + Math.random() * 0.6
-        dummy.scale.set(scale, scale * 0.6, scale)
+        blocks.push({
+          dx: (Math.random() - 0.5) * 40,
+          dy: (Math.random() - 0.5) * 10,
+          dz: (Math.random() - 0.5) * 40,
+          scale: 0.8 + Math.random() * 0.6
+        })
+      }
+      cloudInstances.push({ x: cx, y: cy, z: cz, speed, blocks })
+    }
+
+    // Initial render
+    let instanceIdx = 0
+    cloudInstances.forEach(cloud => {
+      cloud.blocks.forEach(block => {
+        dummy.position.set(cloud.x + block.dx, cloud.y + block.dy, cloud.z + block.dz)
+        dummy.scale.set(block.scale, block.scale * 0.6, block.scale)
         dummy.updateMatrix()
         clouds.setMatrixAt(instanceIdx++, dummy.matrix)
-      }
-    }
+      })
+    })
+
     clouds.count = instanceIdx
     scene.add(clouds)
 
@@ -539,6 +557,24 @@ export function BlockWorld() {
       const deltaTime = Math.min(gameState.clock.getDelta(), 0.1)
 
       updatePlayerPhysics(player, deltaTime, gameState.keys, chunks)
+
+      // Update clouds
+      let cloudIdx = 0
+      cloudInstances.forEach(cloud => {
+        cloud.x += deltaTime * cloud.speed
+        if (cloud.x > worldWidth / 2) {
+          cloud.x -= worldWidth
+        }
+
+        cloud.blocks.forEach(block => {
+          dummy.position.set(cloud.x + block.dx, cloud.y + block.dy, cloud.z + block.dz)
+          dummy.scale.set(block.scale, block.scale * 0.6, block.scale)
+          dummy.updateMatrix()
+          clouds.setMatrixAt(cloudIdx++, dummy.matrix)
+        })
+      })
+      clouds.instanceMatrix.needsUpdate = true
+
       updateFoliageTime(deltaTime)
 
       // Update block breaking
