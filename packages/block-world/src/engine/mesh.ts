@@ -1,17 +1,8 @@
 import * as THREE from 'three'
 import { BlockType, ChunkMeshData } from '../types'
-import { CHUNK_SIZE, CHUNK_HEIGHT, BlockColors } from '../constants'
+import { CHUNK_SIZE, CHUNK_HEIGHT } from '../constants'
 import { getBlock, getBlockIndex } from './world'
-
-export function getBlockColor(type: BlockType, face?: string): number {
-  const blockColors = BlockColors[type] || { all: 0xff00ff }
-
-  if (blockColors.all) return blockColors.all
-
-  if (face === 'top') return blockColors.top || blockColors.all || 0xff00ff
-  if (face === 'bottom') return blockColors.bottom || blockColors.all || 0xff00ff
-  return blockColors.side || blockColors.all || 0xff00ff
-}
+import { getTextureUV, textureAtlas } from '../utils/textures'
 
 export function buildChunkMesh(
   cx: number,
@@ -34,7 +25,11 @@ export function buildChunkMesh(
 
   const faceData: Record<
     string,
-    { dir: [number, number, number]; corners: [number, number, number][] }
+    {
+      dir: [number, number, number];
+      corners: [number, number, number][];
+      uvs: [number, number][];
+    }
   > = {
     top: {
       dir: [0, 1, 0],
@@ -44,6 +39,7 @@ export function buildChunkMesh(
         [1, 1, 0],
         [0, 1, 0],
       ],
+      uvs: [[0, 0], [1, 0], [1, 1], [0, 1]]
     },
     bottom: {
       dir: [0, -1, 0],
@@ -53,6 +49,7 @@ export function buildChunkMesh(
         [1, 0, 1],
         [0, 0, 1],
       ],
+      uvs: [[0, 1], [1, 1], [1, 0], [0, 0]]
     },
     front: {
       dir: [0, 0, 1],
@@ -62,6 +59,7 @@ export function buildChunkMesh(
         [1, 1, 1],
         [0, 1, 1],
       ],
+      uvs: [[0, 0], [1, 0], [1, 1], [0, 1]]
     },
     back: {
       dir: [0, 0, -1],
@@ -71,6 +69,7 @@ export function buildChunkMesh(
         [0, 1, 0],
         [1, 1, 0],
       ],
+      uvs: [[1, 0], [0, 0], [0, 1], [1, 1]]
     },
     right: {
       dir: [1, 0, 0],
@@ -80,6 +79,7 @@ export function buildChunkMesh(
         [1, 1, 0],
         [1, 1, 1],
       ],
+      uvs: [[1, 0], [0, 0], [0, 1], [1, 1]]
     },
     left: {
       dir: [-1, 0, 0],
@@ -89,6 +89,7 @@ export function buildChunkMesh(
         [0, 1, 1],
         [0, 1, 0],
       ],
+      uvs: [[0, 0], [1, 0], [1, 1], [0, 1]]
     },
   }
 
@@ -135,11 +136,9 @@ export function buildChunkMesh(
 
             const faceType =
               faceName === 'top' ? 'top' : faceName === 'bottom' ? 'bottom' : 'side'
-            const colorHex = getBlockColor(block, faceType)
 
-            const r = ((colorHex >> 16) & 255) / 255
-            const g = ((colorHex >> 8) & 255) / 255
-            const b = (colorHex & 255) / 255
+            const uvData = getTextureUV(block, faceType)
+            const [uMin, vMin, uMax, vMax] = uvData
 
             let shade = 1.0
             if (faceName === 'top') shade = 1.0
@@ -147,13 +146,21 @@ export function buildChunkMesh(
             else if (faceName === 'front' || faceName === 'back') shade = 0.8
             else shade = 0.7
 
+            const r = shade
+            const g = shade
+            const b = shade
+
             for (const corner of face.corners) {
               vertices.push(worldX + corner[0], y + corner[1], worldZ + corner[2])
               normals.push(face.dir[0], face.dir[1], face.dir[2])
-              colors.push(r * shade, g * shade, b * shade)
+              colors.push(r, g, b)
             }
 
-            uvs.push(0, 0, 1, 0, 1, 1, 0, 1)
+            for (const uvPoint of face.uvs) {
+              const u = uMin + uvPoint[0] * (uMax - uMin)
+              const v = vMin + uvPoint[1] * (vMax - vMin)
+              uvs.push(u, v)
+            }
 
             indices.push(
               baseIndex,
@@ -179,12 +186,17 @@ export function buildChunkMesh(
     geometry.setAttribute('color', new THREE.Float32BufferAttribute(solidColors, 3))
     geometry.setIndex(solidIndices)
 
-    const material = new THREE.MeshLambertMaterial({
+    const material = new THREE.MeshStandardMaterial({
       vertexColors: true,
+      map: textureAtlas,
+      roughness: 0.8,
+      metalness: 0.1,
       side: THREE.FrontSide,
     })
 
     const mesh = new THREE.Mesh(geometry, material)
+    mesh.castShadow = true
+    mesh.receiveShadow = true
     mesh.frustumCulled = true
     scene.add(mesh)
     meshData.solid = mesh
@@ -201,15 +213,21 @@ export function buildChunkMesh(
     geometry.setAttribute('color', new THREE.Float32BufferAttribute(transparentColors, 3))
     geometry.setIndex(transparentIndices)
 
-    const material = new THREE.MeshLambertMaterial({
+    const material = new THREE.MeshStandardMaterial({
       vertexColors: true,
+      map: textureAtlas,
       transparent: true,
-      opacity: 0.7,
+      opacity: 0.8,
+      alphaTest: 0.1,
       side: THREE.DoubleSide,
       depthWrite: false,
+      roughness: 0.2,
+      metalness: 0.1,
     })
 
     const mesh = new THREE.Mesh(geometry, material)
+    mesh.castShadow = true
+    mesh.receiveShadow = true
     mesh.frustumCulled = true
     mesh.renderOrder = 1
     scene.add(mesh)

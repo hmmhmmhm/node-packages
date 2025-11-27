@@ -61,15 +61,63 @@ export function BlockWorld() {
     containerRef.current.appendChild(renderer.domElement)
 
     // Lighting
-    const ambientLight = new THREE.AmbientLight(0x606060)
+    const ambientLight = new THREE.AmbientLight(0xffffff, 0.6)
     scene.add(ambientLight)
 
-    const directionalLight = new THREE.DirectionalLight(0xffffff, 0.8)
+    const directionalLight = new THREE.DirectionalLight(0xffffff, 1.2)
     directionalLight.position.set(100, 200, 50)
+    directionalLight.castShadow = true
+    directionalLight.shadow.mapSize.width = 2048
+    directionalLight.shadow.mapSize.height = 2048
+    directionalLight.shadow.camera.near = 0.5
+    directionalLight.shadow.camera.far = 500
+    directionalLight.shadow.camera.left = -100
+    directionalLight.shadow.camera.right = 100
+    directionalLight.shadow.camera.top = 100
+    directionalLight.shadow.camera.bottom = -100
+    directionalLight.shadow.bias = -0.0005
     scene.add(directionalLight)
 
-    const hemiLight = new THREE.HemisphereLight(0x87ceeb, 0x8b6914, 0.4)
+    const hemiLight = new THREE.HemisphereLight(0x87ceeb, 0x8b6914, 0.5)
     scene.add(hemiLight)
+
+    // Sun Mesh
+    const sunGeometry = new THREE.SphereGeometry(20, 32, 32)
+    const sunMaterial = new THREE.MeshBasicMaterial({ color: 0xffff00 })
+    const sunMesh = new THREE.Mesh(sunGeometry, sunMaterial)
+    sunMesh.position.copy(directionalLight.position).normalize().multiplyScalar(400)
+    scene.add(sunMesh)
+
+    // Clouds
+    const cloudCount = 50
+    const cloudGeometry = new THREE.BoxGeometry(20, 8, 20)
+    const cloudMaterial = new THREE.MeshBasicMaterial({
+      color: 0xffffff,
+      transparent: true,
+      opacity: 0.8
+    })
+    const clouds = new THREE.InstancedMesh(cloudGeometry, cloudMaterial, cloudCount * 5)
+
+    const dummy = new THREE.Object3D()
+    let instanceIdx = 0
+    for (let i = 0; i < cloudCount; i++) {
+      const cx = (Math.random() - 0.5) * 1000
+      const cy = 150 + Math.random() * 50
+      const cz = (Math.random() - 0.5) * 1000
+
+      const blocksInCloud = Math.floor(Math.random() * 3) + 3
+      for (let j = 0; j < blocksInCloud; j++) {
+        dummy.position.set(
+          cx + (Math.random() - 0.5) * 30,
+          cy + (Math.random() - 0.5) * 10,
+          cz + (Math.random() - 0.5) * 30
+        )
+        dummy.updateMatrix()
+        clouds.setMatrixAt(instanceIdx++, dummy.matrix)
+      }
+    }
+    clouds.count = instanceIdx
+    scene.add(clouds)
 
     // Sky
     const skyGeometry = new THREE.SphereGeometry(500, 32, 32)
