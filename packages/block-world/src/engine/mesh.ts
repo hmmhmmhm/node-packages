@@ -117,7 +117,12 @@ export function buildChunkMesh(
         const worldX = cx * CHUNK_SIZE + x
         const worldZ = cz * CHUNK_SIZE + z
 
-        if (block === BlockType.BUSH || block === BlockType.RED_FLOWER || block === BlockType.YELLOW_FLOWER) {
+        if (
+          block === BlockType.BUSH ||
+          block === BlockType.RED_FLOWER ||
+          block === BlockType.YELLOW_FLOWER ||
+          block === BlockType.DEAD_BUSH
+        ) {
           // Special rendering for bush/flowers: Cross-mesh (Billboard style)
           // Two intersecting planes
           const uvData = getTextureUV(block, 'side')
@@ -233,7 +238,8 @@ export function buildChunkMesh(
             neighbor === BlockType.BUSH ||
             neighbor === BlockType.RED_FLOWER ||
             neighbor === BlockType.YELLOW_FLOWER ||
-            neighbor === BlockType.PALM_LEAVES
+            neighbor === BlockType.PALM_LEAVES ||
+            neighbor === BlockType.DEAD_BUSH
 
           // Determine if face should be rendered
           let shouldRenderFace = false

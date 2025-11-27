@@ -630,6 +630,26 @@ function drawPalmLeaves(ctx: CanvasRenderingContext2D, x: number, y: number) {
   }
 }
 
+function drawDeadBush(ctx: CanvasRenderingContext2D, x: number, y: number) {
+  ctx.clearRect(x, y, 16, 16)
+
+  ctx.fillStyle = '#8b5a2b' // Dried brown
+
+  // Draw leafless stems
+  // Main stem
+  ctx.fillRect(x + 7, y + 10, 2, 6)
+
+  // Branches
+  ctx.fillRect(x + 5, y + 6, 1, 5)
+  ctx.fillRect(x + 10, y + 7, 1, 4)
+  ctx.fillRect(x + 3, y + 4, 1, 3)
+  ctx.fillRect(x + 12, y + 5, 1, 3)
+
+  // Connecting horizontal bits
+  ctx.fillRect(x + 6, y + 10, 1, 1)
+  ctx.fillRect(x + 9, y + 10, 1, 1)
+}
+
 function drawToContext(ctx: CanvasRenderingContext2D, x: number, y: number, type: BlockType, face: string) {
   switch (type) {
     case BlockType.GRASS:
@@ -658,6 +678,9 @@ function drawToContext(ctx: CanvasRenderingContext2D, x: number, y: number, type
       break
     case BlockType.BUSH:
       drawBush(ctx, x, y)
+      break
+    case BlockType.DEAD_BUSH:
+      drawDeadBush(ctx, x, y)
       break
     case BlockType.RED_FLOWER:
       drawFlower(ctx, x, y, '#ff2222')
@@ -728,7 +751,7 @@ export function initializeTextures() {
   // Initialize atlas
   atlasCtx.clearRect(0, 0, ATLAS_SIZE, ATLAS_SIZE)
 
-  for (let type = 1; type <= 25; type++) {
+  for (let type = 1; type <= 26; type++) {
     // For HUD
     textureCtx.clearRect(0, 0, 16, 16)
     drawToContext(textureCtx, 0, 0, type as BlockType, 'front')

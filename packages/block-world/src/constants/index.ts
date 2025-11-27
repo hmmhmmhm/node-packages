@@ -41,6 +41,7 @@ export const BlockNames: Record<BlockType, string> = {
   [BlockType.CACTUS]: 'Cactus',
   [BlockType.PALM_WOOD]: 'Palm Wood',
   [BlockType.PALM_LEAVES]: 'Palm Leaves',
+  [BlockType.DEAD_BUSH]: 'Dead Bush',
 }
 
 export const BlockHardness: Record<BlockType, number> = {
@@ -70,6 +71,7 @@ export const BlockHardness: Record<BlockType, number> = {
   [BlockType.CACTUS]: 0.4,
   [BlockType.PALM_WOOD]: 2.0,
   [BlockType.PALM_LEAVES]: 0.2,
+  [BlockType.DEAD_BUSH]: 0.1,
 }
 
 export const BlockColors: Record<
@@ -114,4 +116,5 @@ export const BlockColors: Record<
   [BlockType.CACTUS]: { all: 0x558822 },
   [BlockType.PALM_WOOD]: { all: 0x8b6914 },
   [BlockType.PALM_LEAVES]: { all: 0x55aa33 },
+  [BlockType.DEAD_BUSH]: { all: 0x8b5a2b },
 }

@@ -99,7 +99,66 @@ export class WorldGenerator {
     this.generateTrees(cx, cz, chunkData)
     this.generatePalmTrees(cx, cz, chunkData)
     this.generateCacti(cx, cz, chunkData)
+    this.generateDeadBushes(cx, cz, chunkData)
     return chunkData
+  }
+
+  private generateDeadBushes(cx: number, cz: number, chunkData: Uint8Array) {
+    const rng = new SimplexNoise(cx * 4000 + cz)
+
+    for (let x = 0; x < CHUNK_SIZE; x++) {
+      for (let z = 0; z < CHUNK_SIZE; z++) {
+        const worldX = cx * CHUNK_SIZE + x
+        const worldZ = cz * CHUNK_SIZE + z
+
+        const biomeNoise = this.noise.noise2D(worldX * 0.005, worldZ * 0.005)
+        const isDesert = biomeNoise > 0.4
+
+        if (isDesert) {
+          // Random density, but fairly common (slightly less than Bush 10%)
+          // Use a noise or just simple random?
+          // Since we want it "patchy" maybe noise is better, or just random per block.
+          // Bush uses simple random 10%.
+          // Let's use simple random 7% for Dead Bush.
+          // But we need deterministic random for the chunk.
+          // rng.noise2D gives -1..1.
+
+          // Actually, Bush in main loop uses Math.random().
+          // Math.random() is not seeded by chunk in the main loop! 
+          // Wait, `generateChunk` uses `Math.random()` for ores and bushes?
+          // Yes, line 48 `const oreChance = Math.random()`.
+          // This means world generation is NOT deterministic if `Math.random()` isn't seeded.
+          // This is a flaw in the existing code, but I should follow the pattern or use the noise/seeded rng.
+          // `generateTrees` uses `treeRng`.
+
+          // I'll use `rng.noise2D` to simulate randomness or just a simple seeded hash.
+          // Or just iterate surface and use `Math.random()` if I don't care about deterministic re-gen (which might be true for this simplified engine).
+          // But `generateCacti` uses `rng`.
+
+          // Let's use `rng` to decide "patchiness" or just probability.
+          // To emulate `Math.random() < 0.07` with SimplexNoise:
+          // Noise is smooth.
+          // I can use a simple pseudo-random function based on coords.
+
+          const pseudoRandom = Math.abs(Math.sin(worldX * 12.9898 + worldZ * 78.233) * 43758.5453) % 1;
+
+          if (pseudoRandom < 0.07) { // 7% chance
+            for (let y = CHUNK_HEIGHT - 5; y > WATER_LEVEL; y--) {
+              const index = x + y * CHUNK_SIZE + z * CHUNK_SIZE * CHUNK_HEIGHT
+              if (chunkData[index] === BlockType.SAND) {
+                const aboveIndex = x + (y + 1) * CHUNK_SIZE + z * CHUNK_SIZE * CHUNK_HEIGHT
+                if (y + 1 < CHUNK_HEIGHT && chunkData[aboveIndex] === BlockType.AIR) {
+                  chunkData[aboveIndex] = BlockType.DEAD_BUSH
+                }
+                break
+              } else if (chunkData[index] !== BlockType.AIR) {
+                break
+              }
+            }
+          }
+        }
+      }
+    }
   }
 
   private generatePalmTrees(cx: number, cz: number, chunkData: Uint8Array) {

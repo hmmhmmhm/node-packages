@@ -27,6 +27,7 @@ export enum BlockType {
   CACTUS = 23,
   PALM_WOOD = 24,
   PALM_LEAVES = 25,
+  DEAD_BUSH = 26,
 }
 
 export interface Player {

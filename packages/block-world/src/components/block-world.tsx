@@ -463,7 +463,8 @@ export function BlockWorld() {
       if (
         hit.block.type === BlockType.BUSH ||
         hit.block.type === BlockType.RED_FLOWER ||
-        hit.block.type === BlockType.YELLOW_FLOWER
+        hit.block.type === BlockType.YELLOW_FLOWER ||
+        hit.block.type === BlockType.DEAD_BUSH
       ) {
         // Replace Bush/Flowers
         px = hit.block.x
