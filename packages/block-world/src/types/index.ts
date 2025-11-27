@@ -21,6 +21,7 @@ export enum BlockType {
   DIAMOND_ORE = 17,
   SNOW = 18,
   ICE = 19,
+  BUSH = 20,
 }
 
 export interface Player {

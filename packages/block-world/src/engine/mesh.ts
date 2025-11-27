@@ -29,6 +29,7 @@ export function buildChunkMesh(
   const foliageUvs: number[] = []
   const foliageIndices: number[] = []
   const foliageColors: number[] = []
+  const foliageWindWeights: number[] = []
 
   const fluidVertices: number[] = []
   const fluidNormals: number[] = []
@@ -116,6 +117,75 @@ export function buildChunkMesh(
         const worldX = cx * CHUNK_SIZE + x
         const worldZ = cz * CHUNK_SIZE + z
 
+        if (block === BlockType.BUSH) {
+          // Special rendering for bush: Cross-mesh (Billboard style)
+          // Two intersecting planes
+          const uvData = getTextureUV(block, 'side')
+          const [uMin, vMin, uMax, vMax] = uvData
+          const baseIndex = foliageVertices.length / 3
+
+          // Plane 1: (0,0,0) to (1,0,1) diagonal
+          foliageVertices.push(
+            worldX, y, worldZ,
+            worldX + 1, y, worldZ + 1,
+            worldX + 1, y + 0.85, worldZ + 1,
+            worldX, y + 0.85, worldZ
+          )
+
+          // Plane 2: (0,0,1) to (1,0,0) diagonal
+          foliageVertices.push(
+            worldX, y, worldZ + 1,
+            worldX + 1, y, worldZ,
+            worldX + 1, y + 0.85, worldZ,
+            worldX, y + 0.85, worldZ + 1
+          )
+
+          // Normals: Point up for uniform lighting on plants
+          for (let i = 0; i < 8; i++) {
+            foliageNormals.push(0, 1, 0)
+            foliageColors.push(1, 1, 1) // Full brightness
+          }
+
+          // Wind Weights: 0 for bottom, 1 for top
+          // Plane 1: Bottom, Bottom, Top, Top
+          foliageWindWeights.push(0, 0, 1, 1)
+          // Plane 2: Bottom, Bottom, Top, Top
+          foliageWindWeights.push(0, 0, 1, 1)
+
+          // UVs - repeated for both sides
+          // Plane 1
+          foliageUvs.push(
+            uMin, vMin,
+            uMax, vMin,
+            uMax, vMax,
+            uMin, vMax
+          )
+          // Plane 2
+          foliageUvs.push(
+            uMin, vMin,
+            uMax, vMin,
+            uMax, vMax,
+            uMin, vMax
+          )
+
+          // Indices
+          // Plane 1 (Double sided via material, but here we just add one set of indices)
+          foliageIndices.push(
+            baseIndex, baseIndex + 1, baseIndex + 2,
+            baseIndex, baseIndex + 2, baseIndex + 3
+          )
+          // Plane 2
+          foliageIndices.push(
+            baseIndex + 4, baseIndex + 5, baseIndex + 6,
+            baseIndex + 4, baseIndex + 6, baseIndex + 7
+          )
+
+          // Add back faces for simple double-sided rendering logic if needed, 
+          // but material is set to DoubleSide so this is fine.
+
+          continue
+        }
+
         const isFoliage = block === BlockType.LEAVES
         const isFluid = block === BlockType.WATER
         const isTransparent = block === BlockType.GLASS
@@ -159,7 +229,8 @@ export function buildChunkMesh(
             neighbor === BlockType.AIR ||
             neighbor === BlockType.WATER ||
             neighbor === BlockType.GLASS ||
-            neighbor === BlockType.LEAVES
+            neighbor === BlockType.LEAVES ||
+            neighbor === BlockType.BUSH
 
           // Determine if face should be rendered
           let shouldRenderFace = false
@@ -179,6 +250,11 @@ export function buildChunkMesh(
 
           if (shouldRenderFace) {
             const baseIndex = vertices.length / 3
+
+            // Add wind weight for foliage
+            if (isFoliage) {
+              foliageWindWeights.push(1, 1, 1, 1)
+            }
 
             const faceType =
               faceName === 'top' ? 'top' : faceName === 'bottom' ? 'bottom' : 'side'
@@ -286,6 +362,7 @@ export function buildChunkMesh(
     geometry.setAttribute('normal', new THREE.Float32BufferAttribute(foliageNormals, 3))
     geometry.setAttribute('uv', new THREE.Float32BufferAttribute(foliageUvs, 2))
     geometry.setAttribute('color', new THREE.Float32BufferAttribute(foliageColors, 3))
+    geometry.setAttribute('windWeight', new THREE.Float32BufferAttribute(foliageWindWeights, 1))
     geometry.setIndex(foliageIndices)
 
     const material = getFoliageMaterial()

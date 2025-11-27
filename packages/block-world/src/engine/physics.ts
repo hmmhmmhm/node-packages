@@ -243,7 +243,7 @@ function checkCollision(
 
 function isBlockSolid(x: number, y: number, z: number, chunks: Map<string, Uint8Array>): boolean {
   const block = getBlock(x, y, z, chunks)
-  return block !== BlockType.AIR && block !== BlockType.WATER
+  return block !== BlockType.AIR && block !== BlockType.WATER && block !== BlockType.BUSH
 }
 
 export function raycast(

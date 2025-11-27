@@ -37,6 +37,7 @@ export function getFoliageMaterial(): THREE.MeshStandardMaterial {
       `
       #include <common>
       uniform float uTime;
+      attribute float windWeight;
       `
     )
 
@@ -50,9 +51,15 @@ export function getFoliageMaterial(): THREE.MeshStandardMaterial {
       float windSpeed = 2.0;
       float windScale = 0.5;
       
+      // Calculate sway
       float swayX = sin(uTime * windSpeed + position.z * windScale) * windStrength;
       float swayZ = cos(uTime * windSpeed * 0.8 + position.x * windScale) * windStrength;
       float swayY = sin(uTime * windSpeed * 1.2 + position.x * windScale + position.z * windScale) * windStrength * 0.5;
+
+      // Apply wind weight (0 for bottom of bush, 1 for top of bush/leaves)
+      swayX *= windWeight;
+      swayZ *= windWeight;
+      swayY *= windWeight;
 
       transformed.x += swayX;
       transformed.z += swayZ;

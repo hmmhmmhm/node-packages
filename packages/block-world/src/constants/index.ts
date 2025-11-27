@@ -35,6 +35,7 @@ export const BlockNames: Record<BlockType, string> = {
   [BlockType.DIAMOND_ORE]: 'Diamond Ore',
   [BlockType.SNOW]: 'Snow',
   [BlockType.ICE]: 'Ice',
+  [BlockType.BUSH]: 'Bush',
 }
 
 export const BlockHardness: Record<BlockType, number> = {
@@ -58,6 +59,7 @@ export const BlockHardness: Record<BlockType, number> = {
   [BlockType.DIAMOND_ORE]: 3.0,
   [BlockType.SNOW]: 0.2,
   [BlockType.ICE]: 0.5,
+  [BlockType.BUSH]: 0.1,
 }
 
 export const BlockColors: Record<
@@ -96,4 +98,5 @@ export const BlockColors: Record<
   [BlockType.DIAMOND_ORE]: { all: 0x6a8a8a },
   [BlockType.SNOW]: { all: 0xf0f0f0 },
   [BlockType.ICE]: { all: 0xa0c0e0 },
+  [BlockType.BUSH]: { all: 0x3cb03c },
 }

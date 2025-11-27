@@ -453,17 +453,31 @@ export function BlockWorld() {
 
     const placeBlock = () => {
       const hit = raycast(camera, player.rotation, chunks)
-      if (!hit || !hit.previous) return
+      if (!hit) return
 
       const selectedItem = inventory.hotbar[player.selectedSlot]
       if (!selectedItem || selectedItem.count <= 0) return
 
-      const { x: px, y: py, z: pz } = hit.previous
+      let px: number, py: number, pz: number
+
+      if (hit.block.type === BlockType.BUSH) {
+        // Replace Bush
+        px = hit.block.x
+        py = hit.block.y
+        pz = hit.block.z
+      } else {
+        // Normal placement against face
+        if (!hit.previous) return
+        px = hit.previous.x
+        py = hit.previous.y
+        pz = hit.previous.z
+      }
 
       const playerBlockX = Math.floor(player.position.x)
       const playerBlockY = Math.floor(player.position.y)
       const playerBlockZ = Math.floor(player.position.z)
 
+      // Check if trying to place block inside player
       if (
         px === playerBlockX &&
         pz === playerBlockZ &&

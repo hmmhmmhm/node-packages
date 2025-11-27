@@ -491,6 +491,25 @@ function drawIce(ctx: CanvasRenderingContext2D, x: number, y: number) {
   ctx.fillRect(x + 10, y + 8, 2, 2)
 }
 
+function drawBush(ctx: CanvasRenderingContext2D, x: number, y: number) {
+  // Clear background for transparency (since we'll use cross-mesh)
+  ctx.clearRect(x, y, 16, 16)
+
+  // Draw some vertical stems/leaves for "tall grass/bush" look
+  for (let i = 0; i < 8; i++) {
+    const stemX = Math.floor(Math.random() * 14) + 1
+    const stemHeight = Math.floor(Math.random() * 10) + 6
+    const width = Math.random() > 0.5 ? 1 : 2
+
+    // Vary greens
+    const colors = ['#3cb03c', '#4cd04c', '#329932', '#55dd55', '#2a8a2a']
+    ctx.fillStyle = colors[Math.floor(Math.random() * colors.length)]
+
+    // Draw from bottom up
+    ctx.fillRect(x + stemX, y + 16 - stemHeight, width, stemHeight)
+  }
+}
+
 function drawToContext(ctx: CanvasRenderingContext2D, x: number, y: number, type: BlockType, face: string) {
   switch (type) {
     case BlockType.GRASS:
@@ -516,6 +535,9 @@ function drawToContext(ctx: CanvasRenderingContext2D, x: number, y: number, type
       break
     case BlockType.LEAVES:
       drawLeaves(ctx, x, y)
+      break
+    case BlockType.BUSH:
+      drawBush(ctx, x, y)
       break
     case BlockType.COBBLESTONE:
       drawCobblestone(ctx, x, y)
@@ -569,7 +591,7 @@ export function initializeTextures() {
   // Initialize atlas
   atlasCtx.clearRect(0, 0, ATLAS_SIZE, ATLAS_SIZE)
 
-  for (let type = 1; type <= 19; type++) {
+  for (let type = 1; type <= 20; type++) {
     // For HUD
     textureCtx.clearRect(0, 0, 16, 16)
     drawToContext(textureCtx, 0, 0, type as BlockType, 'front')

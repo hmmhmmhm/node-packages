@@ -73,7 +73,16 @@ export class WorldGenerator {
           } else if (y <= WATER_LEVEL) {
             chunkData[index] = BlockType.WATER
           } else {
-            chunkData[index] = BlockType.AIR
+            // Chance to spawn bush on grass
+            if (
+              y === height + 1 &&
+              chunkData[index - CHUNK_SIZE] === BlockType.GRASS &&
+              Math.random() < 0.1
+            ) {
+              chunkData[index] = BlockType.BUSH
+            } else {
+              chunkData[index] = BlockType.AIR
+            }
           }
         }
       }
