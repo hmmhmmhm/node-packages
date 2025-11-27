@@ -57,6 +57,7 @@ export interface ChunkMeshData {
   solid?: THREE.Mesh
   transparent?: THREE.Mesh
   foliage?: THREE.Mesh
+  fluid?: THREE.Mesh
 }
 
 export interface GameState {

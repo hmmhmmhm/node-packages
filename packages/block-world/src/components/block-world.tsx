@@ -10,7 +10,7 @@ import { Lensflare, LensflareElement } from 'three/examples/jsm/objects/Lensflar
 import { Player, Inventory, ChunkMeshData } from '../types'
 import { BlockType } from '../types'
 import { CHUNK_SIZE, CHUNK_HEIGHT, PLAYER_HEIGHT, MOUSE_SENSITIVITY, RENDER_DISTANCE, BlockHardness } from '../constants'
-import { WorldGenerator, getChunkKey, worldToChunk, setBlock, getChunksInRadius } from '../engine/world'
+import { WorldGenerator, getChunkKey, worldToChunk, setBlock, getChunksInRadius, getBlock } from '../engine/world'
 import { buildChunkMesh, disposeMesh } from '../engine/mesh'
 import { updatePlayerPhysics, raycast } from '../engine/physics'
 import { updateFoliageTime } from '../engine/materials'
@@ -276,12 +276,21 @@ export function BlockWorld() {
     const { cx, cz } = worldToChunk(player.position.x, player.position.z)
     const initialChunks = getChunksInRadius(cx, cz, RENDER_DISTANCE)
 
+    // First pass: Generate data
     initialChunks.forEach(({ cx: chunkX, cz: chunkZ }) => {
       const chunkData = worldGen.generateChunk(chunkX, chunkZ)
       const key = getChunkKey(chunkX, chunkZ)
       chunks.set(key, chunkData)
-      const meshData = buildChunkMesh(chunkX, chunkZ, chunkData, chunks, scene)
-      chunkMeshes.set(key, meshData)
+    })
+
+    // Second pass: Build meshes (now that neighbors exist)
+    initialChunks.forEach(({ cx: chunkX, cz: chunkZ }) => {
+      const key = getChunkKey(chunkX, chunkZ)
+      const chunkData = chunks.get(key)
+      if (chunkData) {
+        const meshData = buildChunkMesh(chunkX, chunkZ, chunkData, chunks, scene)
+        chunkMeshes.set(key, meshData)
+      }
     })
 
     // Find spawn point
@@ -499,6 +508,26 @@ export function BlockWorld() {
       if (!gameState.gameStarted) {
         renderer.render(scene, camera)
         return
+      }
+
+      // Check underwater state for visual effects
+      // Camera Y is player Y + PLAYER_HEIGHT * 0.9 (approx)
+      // We use the same logic as physics to get the block at camera position
+      const cameraBlockX = Math.floor(camera.position.x)
+      const cameraBlockY = Math.floor(camera.position.y)
+      const cameraBlockZ = Math.floor(camera.position.z)
+
+      const cameraBlock = getBlock(cameraBlockX, cameraBlockY, cameraBlockZ, chunks)
+      const isUnderwater = cameraBlock === BlockType.WATER
+
+      if (isUnderwater) {
+        // Underwater fog
+        scene.fog = new THREE.Fog(0x003366, 0.1, 15) // Dark blue, dense
+        scene.background = new THREE.Color(0x003366)
+      } else {
+        // Normal sky fog
+        scene.fog = new THREE.Fog(0x87ceeb, 30, RENDER_DISTANCE * CHUNK_SIZE - 20)
+        scene.background = new THREE.Color(0x87ceeb)
       }
 
       // 10프레임마다 한 번씩 로그

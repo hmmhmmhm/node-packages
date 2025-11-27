@@ -10,7 +10,13 @@ export function updatePlayerPhysics(
   keys: Record<string, boolean>,
   chunks: Map<string, Uint8Array>
 ) {
-  const moveSpeed = player.isFlying ? FLY_SPEED : MOVE_SPEED
+  // Check if head is underwater
+  const headPos = player.position.clone()
+  headPos.y += PLAYER_HEIGHT * 0.8
+  const headBlock = getBlock(Math.floor(headPos.x), Math.floor(headPos.y), Math.floor(headPos.z), chunks)
+  const isUnderwater = headBlock === BlockType.WATER
+
+  const moveSpeed = player.isFlying ? FLY_SPEED : (isUnderwater ? MOVE_SPEED * 0.6 : MOVE_SPEED)
 
   const forward = new THREE.Vector3(
     -Math.sin(player.rotation.y),
@@ -28,23 +34,35 @@ export function updatePlayerPhysics(
 
   if (moveDirection.length() > 0) {
     moveDirection.normalize()
+    player.velocity.x = moveDirection.x * moveSpeed
+    player.velocity.z = moveDirection.z * moveSpeed
+  } else {
+    player.velocity.x = 0
+    player.velocity.z = 0
   }
 
   if (player.isFlying) {
-    player.velocity.x = moveDirection.x * moveSpeed
-    player.velocity.z = moveDirection.z * moveSpeed
+    if (keys['Space']) player.velocity.y = FLY_SPEED
+    else if (keys['ShiftLeft']) player.velocity.y = -FLY_SPEED
+    else player.velocity.y = 0
+  } else if (isUnderwater) {
+    // Water physics
+    player.velocity.x *= 0.8 // More drag
+    player.velocity.z *= 0.8
 
     if (keys['Space']) {
-      player.velocity.y = moveSpeed
-    } else if (keys['ShiftLeft'] || keys['ShiftRight']) {
-      player.velocity.y = -moveSpeed
+      // Swim up
+      player.velocity.y = 4 // Constant upward velocity while holding space
+    } else if (keys['ShiftLeft']) {
+      // Swim down
+      player.velocity.y = -3
     } else {
-      player.velocity.y = 0
+      // Buoyancy / slight sinking
+      player.velocity.y = -1 // Slowly sink
     }
+    player.isGrounded = false
   } else {
-    player.velocity.x = moveDirection.x * moveSpeed
-    player.velocity.z = moveDirection.z * moveSpeed
-
+    // Normal physics
     if (!player.isGrounded) {
       player.velocity.y += GRAVITY * deltaTime
     }

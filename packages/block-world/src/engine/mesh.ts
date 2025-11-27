@@ -3,7 +3,7 @@ import { BlockType, ChunkMeshData } from '../types'
 import { CHUNK_SIZE, CHUNK_HEIGHT } from '../constants'
 import { getBlock, getBlockIndex } from './world'
 import { getTextureUV, textureAtlas } from '../utils/textures'
-import { getFoliageMaterial } from './materials'
+import { getFoliageMaterial, getFluidMaterial } from './materials'
 
 export function buildChunkMesh(
   cx: number,
@@ -29,6 +29,12 @@ export function buildChunkMesh(
   const foliageUvs: number[] = []
   const foliageIndices: number[] = []
   const foliageColors: number[] = []
+
+  const fluidVertices: number[] = []
+  const fluidNormals: number[] = []
+  const fluidUvs: number[] = []
+  const fluidIndices: number[] = []
+  const fluidColors: number[] = []
 
   const faceData: Record<
     string,
@@ -111,9 +117,8 @@ export function buildChunkMesh(
         const worldZ = cz * CHUNK_SIZE + z
 
         const isFoliage = block === BlockType.LEAVES
-        const isTransparent =
-          block === BlockType.WATER ||
-          block === BlockType.GLASS
+        const isFluid = block === BlockType.WATER
+        const isTransparent = block === BlockType.GLASS
 
         let vertices, normals, uvs, indices, colors
 
@@ -123,6 +128,12 @@ export function buildChunkMesh(
           uvs = foliageUvs
           indices = foliageIndices
           colors = foliageColors
+        } else if (isFluid) {
+          vertices = fluidVertices
+          normals = fluidNormals
+          uvs = fluidUvs
+          indices = fluidIndices
+          colors = fluidColors
         } else if (isTransparent) {
           vertices = transparentVertices
           normals = transparentNormals
@@ -154,6 +165,11 @@ export function buildChunkMesh(
           let shouldRenderFace = false
 
           if (isFoliage) {
+            shouldRenderFace = neighbor !== block && neighborIsTransparent
+          } else if (isFluid) {
+            // Fluid renders if neighbor is not the same fluid and is transparent
+            // This handles surface rendering correctly (water next to air)
+            // and avoids internal faces between same water blocks
             shouldRenderFace = neighbor !== block && neighborIsTransparent
           } else if (isTransparent) {
             shouldRenderFace = neighbor !== block && neighborIsTransparent
@@ -283,6 +299,25 @@ export function buildChunkMesh(
     meshData.foliage = mesh
   }
 
+  if (fluidVertices.length > 0) {
+    const geometry = new THREE.BufferGeometry()
+    geometry.setAttribute('position', new THREE.Float32BufferAttribute(fluidVertices, 3))
+    geometry.setAttribute('normal', new THREE.Float32BufferAttribute(fluidNormals, 3))
+    geometry.setAttribute('uv', new THREE.Float32BufferAttribute(fluidUvs, 2))
+    geometry.setAttribute('color', new THREE.Float32BufferAttribute(fluidColors, 3))
+    geometry.setIndex(fluidIndices)
+
+    const material = getFluidMaterial()
+
+    const mesh = new THREE.Mesh(geometry, material)
+    mesh.castShadow = false // Water usually doesn't cast shadow like solids (or maybe it does, but let's keep it simple)
+    mesh.receiveShadow = true
+    mesh.frustumCulled = true
+    mesh.renderOrder = 1
+    scene.add(mesh)
+    meshData.fluid = mesh
+  }
+
   return meshData
 }
 
@@ -308,6 +343,11 @@ export function disposeMesh(meshData: ChunkMeshData, scene: THREE.Scene) {
   if (meshData.foliage) {
     scene.remove(meshData.foliage)
     meshData.foliage.geometry.dispose()
+    // Do not dispose material as it is shared
+  }
+  if (meshData.fluid) {
+    scene.remove(meshData.fluid)
+    meshData.fluid.geometry.dispose()
     // Do not dispose material as it is shared
   }
 }
