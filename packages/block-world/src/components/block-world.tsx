@@ -46,7 +46,7 @@ export function BlockWorld() {
     // Initialize Three.js
     const scene = new THREE.Scene()
     scene.background = new THREE.Color(0x87ceeb)
-    scene.fog = new THREE.Fog(0x87ceeb, 50, RENDER_DISTANCE * CHUNK_SIZE)
+    scene.fog = new THREE.Fog(0x87ceeb, 30, RENDER_DISTANCE * CHUNK_SIZE - 20)
 
     const camera = new THREE.PerspectiveCamera(
       75,
@@ -61,10 +61,10 @@ export function BlockWorld() {
     containerRef.current.appendChild(renderer.domElement)
 
     // Lighting
-    const ambientLight = new THREE.AmbientLight(0xffffff, 0.6)
+    const ambientLight = new THREE.AmbientLight(0xffffff, 0.7)
     scene.add(ambientLight)
 
-    const directionalLight = new THREE.DirectionalLight(0xffffff, 1.2)
+    const directionalLight = new THREE.DirectionalLight(0xffffee, 1.1)
     directionalLight.position.set(100, 200, 50)
     directionalLight.castShadow = true
     directionalLight.shadow.mapSize.width = 2048
@@ -81,37 +81,54 @@ export function BlockWorld() {
     const hemiLight = new THREE.HemisphereLight(0x87ceeb, 0x8b6914, 0.5)
     scene.add(hemiLight)
 
-    // Sun Mesh
+    // Sun Mesh with Glow
+    const sunGroup = new THREE.Group()
     const sunGeometry = new THREE.SphereGeometry(20, 32, 32)
-    const sunMaterial = new THREE.MeshBasicMaterial({ color: 0xffff00 })
+    const sunMaterial = new THREE.MeshBasicMaterial({ color: 0xffffaa })
     const sunMesh = new THREE.Mesh(sunGeometry, sunMaterial)
-    sunMesh.position.copy(directionalLight.position).normalize().multiplyScalar(400)
-    scene.add(sunMesh)
+    sunGroup.add(sunMesh)
+
+    // Glow effect (simple transparent sphere)
+    const glowGeometry = new THREE.SphereGeometry(35, 32, 32)
+    const glowMaterial = new THREE.MeshBasicMaterial({
+      color: 0xffff00,
+      transparent: true,
+      opacity: 0.3,
+      side: THREE.BackSide
+    })
+    const glowMesh = new THREE.Mesh(glowGeometry, glowMaterial)
+    sunGroup.add(glowMesh)
+
+    sunGroup.position.copy(directionalLight.position).normalize().multiplyScalar(400)
+    scene.add(sunGroup)
 
     // Clouds
-    const cloudCount = 50
-    const cloudGeometry = new THREE.BoxGeometry(20, 8, 20)
+    const cloudCount = 150
+    const cloudGeometry = new THREE.BoxGeometry(15, 6, 15)
     const cloudMaterial = new THREE.MeshBasicMaterial({
       color: 0xffffff,
       transparent: true,
-      opacity: 0.8
+      opacity: 0.85
     })
-    const clouds = new THREE.InstancedMesh(cloudGeometry, cloudMaterial, cloudCount * 5)
+    const clouds = new THREE.InstancedMesh(cloudGeometry, cloudMaterial, cloudCount * 10)
 
     const dummy = new THREE.Object3D()
     let instanceIdx = 0
     for (let i = 0; i < cloudCount; i++) {
-      const cx = (Math.random() - 0.5) * 1000
-      const cy = 150 + Math.random() * 50
-      const cz = (Math.random() - 0.5) * 1000
+      const cx = (Math.random() - 0.5) * 800
+      const cy = 90 + Math.random() * 30 // Lower clouds
+      const cz = (Math.random() - 0.5) * 800
 
-      const blocksInCloud = Math.floor(Math.random() * 3) + 3
+      const blocksInCloud = Math.floor(Math.random() * 5) + 4
       for (let j = 0; j < blocksInCloud; j++) {
         dummy.position.set(
-          cx + (Math.random() - 0.5) * 30,
+          cx + (Math.random() - 0.5) * 40,
           cy + (Math.random() - 0.5) * 10,
-          cz + (Math.random() - 0.5) * 30
+          cz + (Math.random() - 0.5) * 40
         )
+        // Random scale for fluffiness
+        const scale = 0.8 + Math.random() * 0.6
+        dummy.scale.set(scale, scale * 0.6, scale)
         dummy.updateMatrix()
         clouds.setMatrixAt(instanceIdx++, dummy.matrix)
       }
