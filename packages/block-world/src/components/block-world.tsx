@@ -5,6 +5,7 @@ import { RenderPass } from 'three/examples/jsm/postprocessing/RenderPass.js'
 import { UnrealBloomPass } from 'three/examples/jsm/postprocessing/UnrealBloomPass.js'
 import { SAOPass } from 'three/examples/jsm/postprocessing/SAOPass.js'
 import { OutputPass } from 'three/examples/jsm/postprocessing/OutputPass.js'
+import { SMAAPass } from 'three/examples/jsm/postprocessing/SMAAPass.js'
 import { Lensflare, LensflareElement } from 'three/examples/jsm/objects/Lensflare.js'
 import { Player, Inventory, ChunkMeshData } from '../types'
 import { BlockType } from '../types'
@@ -222,6 +223,13 @@ export function BlockWorld() {
       0.8  // threshold
     )
     composer.addPass(bloomPass)
+
+    // SMAA - Anti-aliasing
+    const smaaPass = new SMAAPass(
+      window.innerWidth * renderer.getPixelRatio(),
+      window.innerHeight * renderer.getPixelRatio()
+    )
+    composer.addPass(smaaPass)
 
     // Output Pass (Tone Mapping & Color Correction)
     const outputPass = new OutputPass()
