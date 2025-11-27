@@ -38,6 +38,9 @@ export const BlockNames: Record<BlockType, string> = {
   [BlockType.BUSH]: 'Bush',
   [BlockType.RED_FLOWER]: 'Red Flower',
   [BlockType.YELLOW_FLOWER]: 'Yellow Flower',
+  [BlockType.CACTUS]: 'Cactus',
+  [BlockType.PALM_WOOD]: 'Palm Wood',
+  [BlockType.PALM_LEAVES]: 'Palm Leaves',
 }
 
 export const BlockHardness: Record<BlockType, number> = {
@@ -64,6 +67,9 @@ export const BlockHardness: Record<BlockType, number> = {
   [BlockType.BUSH]: 0.1,
   [BlockType.RED_FLOWER]: 0.1,
   [BlockType.YELLOW_FLOWER]: 0.1,
+  [BlockType.CACTUS]: 0.4,
+  [BlockType.PALM_WOOD]: 2.0,
+  [BlockType.PALM_LEAVES]: 0.2,
 }
 
 export const BlockColors: Record<
@@ -105,4 +111,7 @@ export const BlockColors: Record<
   [BlockType.BUSH]: { all: 0x3cb03c },
   [BlockType.RED_FLOWER]: { all: 0xff0000 },
   [BlockType.YELLOW_FLOWER]: { all: 0xffff00 },
+  [BlockType.CACTUS]: { all: 0x558822 },
+  [BlockType.PALM_WOOD]: { all: 0x8b6914 },
+  [BlockType.PALM_LEAVES]: { all: 0x55aa33 },
 }

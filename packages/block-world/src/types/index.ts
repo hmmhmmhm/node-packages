@@ -24,6 +24,9 @@ export enum BlockType {
   BUSH = 20,
   RED_FLOWER = 21,
   YELLOW_FLOWER = 22,
+  CACTUS = 23,
+  PALM_WOOD = 24,
+  PALM_LEAVES = 25,
 }
 
 export interface Player {

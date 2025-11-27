@@ -186,7 +186,7 @@ export function buildChunkMesh(
           continue
         }
 
-        const isFoliage = block === BlockType.LEAVES
+        const isFoliage = block === BlockType.LEAVES || block === BlockType.PALM_LEAVES
         const isFluid = block === BlockType.WATER
         const isTransparent = block === BlockType.GLASS
 
@@ -232,7 +232,8 @@ export function buildChunkMesh(
             neighbor === BlockType.LEAVES ||
             neighbor === BlockType.BUSH ||
             neighbor === BlockType.RED_FLOWER ||
-            neighbor === BlockType.YELLOW_FLOWER
+            neighbor === BlockType.YELLOW_FLOWER ||
+            neighbor === BlockType.PALM_LEAVES
 
           // Determine if face should be rendered
           let shouldRenderFace = false

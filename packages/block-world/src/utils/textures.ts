@@ -540,6 +540,96 @@ function drawFlower(ctx: CanvasRenderingContext2D, x: number, y: number, color: 
   ctx.fillRect(x + stemX, y + 3, 2, 2)
 }
 
+function drawCactusSide(ctx: CanvasRenderingContext2D, x: number, y: number) {
+  ctx.fillStyle = '#558822'
+  ctx.fillRect(x, y, 16, 16)
+
+  // Ribs
+  ctx.fillStyle = '#447711'
+  for (let bx = 2; bx < 16; bx += 4) {
+    ctx.fillRect(x + bx, y, 2, 16)
+  }
+
+  // Spines
+  ctx.fillStyle = '#ddddaa'
+  for (let by = 2; by < 16; by += 4) {
+    for (let bx = 1; bx < 16; bx += 4) {
+      if (Math.random() > 0.5) {
+        ctx.fillRect(x + bx, y + by, 1, 1)
+      }
+    }
+  }
+}
+
+function drawCactusTop(ctx: CanvasRenderingContext2D, x: number, y: number) {
+  ctx.fillStyle = '#558822'
+  ctx.fillRect(x, y, 16, 16)
+
+  // Ribs from top view
+  ctx.fillStyle = '#447711'
+  for (let bx = 2; bx < 16; bx += 4) {
+    ctx.fillRect(x + bx, y, 2, 16)
+  }
+  for (let by = 2; by < 16; by += 4) {
+    ctx.fillRect(x, y + by, 16, 2)
+  }
+}
+
+function drawPalmWoodSide(ctx: CanvasRenderingContext2D, x: number, y: number) {
+  ctx.fillStyle = '#a68b5b' // Lighter brown/tan
+  ctx.fillRect(x, y, 16, 16)
+
+  // Horizontal texture (palm rings)
+  ctx.fillStyle = '#8c734b'
+  for (let by = 0; by < 16; by += 4) {
+    ctx.fillRect(x, y + by, 16, 2)
+  }
+
+  // Some noise
+  for (let i = 0; i < 20; i++) {
+    const bx = Math.floor(Math.random() * 16)
+    const by = Math.floor(Math.random() * 16)
+    ctx.fillStyle = Math.random() > 0.5 ? '#7a623d' : '#c4a875'
+    ctx.fillRect(x + bx, y + by, 1, 1)
+  }
+}
+
+function drawPalmWoodTop(ctx: CanvasRenderingContext2D, x: number, y: number) {
+  ctx.fillStyle = '#d9c59e' // Very light core
+  ctx.fillRect(x, y, 16, 16)
+
+  // Bark ring
+  ctx.lineWidth = 2
+  ctx.strokeStyle = '#8c734b'
+  ctx.strokeRect(x + 1, y + 1, 14, 14)
+
+  // Core pattern
+  ctx.fillStyle = '#c4a875'
+  ctx.fillRect(x + 6, y + 6, 4, 4)
+}
+
+function drawPalmLeaves(ctx: CanvasRenderingContext2D, x: number, y: number) {
+  ctx.fillStyle = '#55aa33' // Tropical green
+  ctx.fillRect(x, y, 16, 16)
+
+  // Frond texture
+  for (let i = 0; i < 40; i++) {
+    const bx = Math.floor(Math.random() * 16)
+    const by = Math.floor(Math.random() * 16)
+    const colors = ['#449922', '#66bb44', '#338811']
+    ctx.fillStyle = colors[Math.floor(Math.random() * colors.length)]
+    ctx.fillRect(x + bx, y + by, 1, 1)
+  }
+
+  // Veins or structure
+  ctx.fillStyle = '#338811'
+  // Diagonal
+  for (let i = 0; i < 16; i++) {
+    if (i % 4 === 0) ctx.fillRect(x + i, y + i, 2, 2)
+    if (i % 4 === 2) ctx.fillRect(x + 15 - i, y + i, 2, 2)
+  }
+}
+
 function drawToContext(ctx: CanvasRenderingContext2D, x: number, y: number, type: BlockType, face: string) {
   switch (type) {
     case BlockType.GRASS:
@@ -574,6 +664,17 @@ function drawToContext(ctx: CanvasRenderingContext2D, x: number, y: number, type
       break
     case BlockType.YELLOW_FLOWER:
       drawFlower(ctx, x, y, '#ffff00')
+      break
+    case BlockType.CACTUS:
+      if (face === 'top' || face === 'bottom') drawCactusTop(ctx, x, y)
+      else drawCactusSide(ctx, x, y)
+      break
+    case BlockType.PALM_WOOD:
+      if (face === 'top' || face === 'bottom') drawPalmWoodTop(ctx, x, y)
+      else drawPalmWoodSide(ctx, x, y)
+      break
+    case BlockType.PALM_LEAVES:
+      drawPalmLeaves(ctx, x, y)
       break
     case BlockType.COBBLESTONE:
       drawCobblestone(ctx, x, y)
@@ -627,7 +728,7 @@ export function initializeTextures() {
   // Initialize atlas
   atlasCtx.clearRect(0, 0, ATLAS_SIZE, ATLAS_SIZE)
 
-  for (let type = 1; type <= 22; type++) {
+  for (let type = 1; type <= 25; type++) {
     // For HUD
     textureCtx.clearRect(0, 0, 16, 16)
     drawToContext(textureCtx, 0, 0, type as BlockType, 'front')
