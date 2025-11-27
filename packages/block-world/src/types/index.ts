@@ -56,6 +56,7 @@ export interface RaycastHit {
 export interface ChunkMeshData {
   solid?: THREE.Mesh
   transparent?: THREE.Mesh
+  foliage?: THREE.Mesh
 }
 
 export interface GameState {

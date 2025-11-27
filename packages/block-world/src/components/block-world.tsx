@@ -13,6 +13,7 @@ import { CHUNK_SIZE, CHUNK_HEIGHT, PLAYER_HEIGHT, MOUSE_SENSITIVITY, RENDER_DIST
 import { WorldGenerator, getChunkKey, worldToChunk, setBlock, getChunksInRadius } from '../engine/world'
 import { buildChunkMesh, disposeMesh } from '../engine/mesh'
 import { updatePlayerPhysics, raycast } from '../engine/physics'
+import { updateFoliageTime } from '../engine/materials'
 import { initializeTextures, createLensflareTexture, createSunTexture } from '../utils/textures'
 import { Crosshair } from './crosshair'
 import { Hud } from './hud'
@@ -509,6 +510,7 @@ export function BlockWorld() {
       const deltaTime = Math.min(gameState.clock.getDelta(), 0.1)
 
       updatePlayerPhysics(player, deltaTime, gameState.keys, chunks)
+      updateFoliageTime(deltaTime)
 
       // Update block breaking
       if (gameState.isBreaking && gameState.mouseHeld) {

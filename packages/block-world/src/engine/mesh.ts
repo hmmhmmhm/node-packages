@@ -3,6 +3,7 @@ import { BlockType, ChunkMeshData } from '../types'
 import { CHUNK_SIZE, CHUNK_HEIGHT } from '../constants'
 import { getBlock, getBlockIndex } from './world'
 import { getTextureUV, textureAtlas } from '../utils/textures'
+import { getFoliageMaterial } from './materials'
 
 export function buildChunkMesh(
   cx: number,
@@ -22,6 +23,12 @@ export function buildChunkMesh(
   const transparentUvs: number[] = []
   const transparentIndices: number[] = []
   const transparentColors: number[] = []
+
+  const foliageVertices: number[] = []
+  const foliageNormals: number[] = []
+  const foliageUvs: number[] = []
+  const foliageIndices: number[] = []
+  const foliageColors: number[] = []
 
   const faceData: Record<
     string,
@@ -103,16 +110,32 @@ export function buildChunkMesh(
         const worldX = cx * CHUNK_SIZE + x
         const worldZ = cz * CHUNK_SIZE + z
 
+        const isFoliage = block === BlockType.LEAVES
         const isTransparent =
           block === BlockType.WATER ||
-          block === BlockType.GLASS ||
-          block === BlockType.LEAVES
+          block === BlockType.GLASS
 
-        const vertices = isTransparent ? transparentVertices : solidVertices
-        const normals = isTransparent ? transparentNormals : solidNormals
-        const uvs = isTransparent ? transparentUvs : solidUvs
-        const indices = isTransparent ? transparentIndices : solidIndices
-        const colors = isTransparent ? transparentColors : solidColors
+        let vertices, normals, uvs, indices, colors
+
+        if (isFoliage) {
+          vertices = foliageVertices
+          normals = foliageNormals
+          uvs = foliageUvs
+          indices = foliageIndices
+          colors = foliageColors
+        } else if (isTransparent) {
+          vertices = transparentVertices
+          normals = transparentNormals
+          uvs = transparentUvs
+          indices = transparentIndices
+          colors = transparentColors
+        } else {
+          vertices = solidVertices
+          normals = solidNormals
+          uvs = solidUvs
+          indices = solidIndices
+          colors = solidColors
+        }
 
         for (const [faceName, face] of Object.entries(faceData)) {
           const neighborX = worldX + face.dir[0]
@@ -127,9 +150,16 @@ export function buildChunkMesh(
             neighbor === BlockType.GLASS ||
             neighbor === BlockType.LEAVES
 
-          const shouldRenderFace = isTransparent
-            ? neighbor !== block && neighborIsTransparent
-            : neighborIsTransparent
+          // Determine if face should be rendered
+          let shouldRenderFace = false
+
+          if (isFoliage) {
+            shouldRenderFace = neighbor !== block && neighborIsTransparent
+          } else if (isTransparent) {
+            shouldRenderFace = neighbor !== block && neighborIsTransparent
+          } else {
+            shouldRenderFace = neighborIsTransparent
+          }
 
           if (shouldRenderFace) {
             const baseIndex = vertices.length / 3
@@ -234,6 +264,25 @@ export function buildChunkMesh(
     meshData.transparent = mesh
   }
 
+  if (foliageVertices.length > 0) {
+    const geometry = new THREE.BufferGeometry()
+    geometry.setAttribute('position', new THREE.Float32BufferAttribute(foliageVertices, 3))
+    geometry.setAttribute('normal', new THREE.Float32BufferAttribute(foliageNormals, 3))
+    geometry.setAttribute('uv', new THREE.Float32BufferAttribute(foliageUvs, 2))
+    geometry.setAttribute('color', new THREE.Float32BufferAttribute(foliageColors, 3))
+    geometry.setIndex(foliageIndices)
+
+    const material = getFoliageMaterial()
+
+    const mesh = new THREE.Mesh(geometry, material)
+    mesh.castShadow = true
+    mesh.receiveShadow = true
+    mesh.frustumCulled = true
+    mesh.renderOrder = 1
+    scene.add(mesh)
+    meshData.foliage = mesh
+  }
+
   return meshData
 }
 
@@ -255,5 +304,10 @@ export function disposeMesh(meshData: ChunkMeshData, scene: THREE.Scene) {
     } else {
       meshData.transparent.material.dispose()
     }
+  }
+  if (meshData.foliage) {
+    scene.remove(meshData.foliage)
+    meshData.foliage.geometry.dispose()
+    // Do not dispose material as it is shared
   }
 }
