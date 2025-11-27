@@ -76,10 +76,18 @@ export class WorldGenerator {
             // Chance to spawn bush on grass
             if (
               y === height + 1 &&
-              chunkData[index - CHUNK_SIZE] === BlockType.GRASS &&
-              Math.random() < 0.1
+              chunkData[index - CHUNK_SIZE] === BlockType.GRASS
             ) {
-              chunkData[index] = BlockType.BUSH
+              const foliageRng = Math.random()
+              if (foliageRng < 0.10) {
+                chunkData[index] = BlockType.BUSH
+              } else if (foliageRng < 0.12) {
+                chunkData[index] = BlockType.RED_FLOWER
+              } else if (foliageRng < 0.14) {
+                chunkData[index] = BlockType.YELLOW_FLOWER
+              } else {
+                chunkData[index] = BlockType.AIR
+              }
             } else {
               chunkData[index] = BlockType.AIR
             }

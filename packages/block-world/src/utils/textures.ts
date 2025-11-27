@@ -510,6 +510,36 @@ function drawBush(ctx: CanvasRenderingContext2D, x: number, y: number) {
   }
 }
 
+function drawFlower(ctx: CanvasRenderingContext2D, x: number, y: number, color: string) {
+  // Clear background for transparency
+  ctx.clearRect(x, y, 16, 16)
+
+  // Stem
+  ctx.fillStyle = '#329932'
+  const stemX = 7 + Math.floor(Math.random() * 2)
+  ctx.fillRect(x + stemX, y + 6, 2, 10)
+
+  // Leaves
+  ctx.fillStyle = '#3cb03c'
+  ctx.fillRect(x + stemX - 2, y + 12, 2, 1)
+  ctx.fillRect(x + stemX + 2, y + 11, 2, 1)
+
+  // Flower Head
+  ctx.fillStyle = color
+  // Center
+  ctx.fillRect(x + stemX - 1, y + 2, 4, 4)
+  // Petals
+  ctx.fillRect(x + stemX - 2, y + 3, 1, 2)
+  ctx.fillRect(x + stemX + 3, y + 3, 1, 2)
+  ctx.fillRect(x + stemX, y + 1, 2, 1)
+  ctx.fillRect(x + stemX, y + 6, 2, 1)
+
+  // Center dot
+  ctx.fillStyle = '#ffff00' // Yellow center for contrast (or orange for yellow flower)
+  if (color === '#ffff00') ctx.fillStyle = '#cc6600'
+  ctx.fillRect(x + stemX, y + 3, 2, 2)
+}
+
 function drawToContext(ctx: CanvasRenderingContext2D, x: number, y: number, type: BlockType, face: string) {
   switch (type) {
     case BlockType.GRASS:
@@ -538,6 +568,12 @@ function drawToContext(ctx: CanvasRenderingContext2D, x: number, y: number, type
       break
     case BlockType.BUSH:
       drawBush(ctx, x, y)
+      break
+    case BlockType.RED_FLOWER:
+      drawFlower(ctx, x, y, '#ff2222')
+      break
+    case BlockType.YELLOW_FLOWER:
+      drawFlower(ctx, x, y, '#ffff00')
       break
     case BlockType.COBBLESTONE:
       drawCobblestone(ctx, x, y)
@@ -591,7 +627,7 @@ export function initializeTextures() {
   // Initialize atlas
   atlasCtx.clearRect(0, 0, ATLAS_SIZE, ATLAS_SIZE)
 
-  for (let type = 1; type <= 20; type++) {
+  for (let type = 1; type <= 22; type++) {
     // For HUD
     textureCtx.clearRect(0, 0, 16, 16)
     drawToContext(textureCtx, 0, 0, type as BlockType, 'front')

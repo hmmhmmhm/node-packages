@@ -460,8 +460,12 @@ export function BlockWorld() {
 
       let px: number, py: number, pz: number
 
-      if (hit.block.type === BlockType.BUSH) {
-        // Replace Bush
+      if (
+        hit.block.type === BlockType.BUSH ||
+        hit.block.type === BlockType.RED_FLOWER ||
+        hit.block.type === BlockType.YELLOW_FLOWER
+      ) {
+        // Replace Bush/Flowers
         px = hit.block.x
         py = hit.block.y
         pz = hit.block.z

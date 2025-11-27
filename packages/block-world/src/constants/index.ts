@@ -36,6 +36,8 @@ export const BlockNames: Record<BlockType, string> = {
   [BlockType.SNOW]: 'Snow',
   [BlockType.ICE]: 'Ice',
   [BlockType.BUSH]: 'Bush',
+  [BlockType.RED_FLOWER]: 'Red Flower',
+  [BlockType.YELLOW_FLOWER]: 'Yellow Flower',
 }
 
 export const BlockHardness: Record<BlockType, number> = {
@@ -60,6 +62,8 @@ export const BlockHardness: Record<BlockType, number> = {
   [BlockType.SNOW]: 0.2,
   [BlockType.ICE]: 0.5,
   [BlockType.BUSH]: 0.1,
+  [BlockType.RED_FLOWER]: 0.1,
+  [BlockType.YELLOW_FLOWER]: 0.1,
 }
 
 export const BlockColors: Record<
@@ -99,4 +103,6 @@ export const BlockColors: Record<
   [BlockType.SNOW]: { all: 0xf0f0f0 },
   [BlockType.ICE]: { all: 0xa0c0e0 },
   [BlockType.BUSH]: { all: 0x3cb03c },
+  [BlockType.RED_FLOWER]: { all: 0xff0000 },
+  [BlockType.YELLOW_FLOWER]: { all: 0xffff00 },
 }
