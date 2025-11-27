@@ -564,8 +564,15 @@ export function BlockWorld() {
       }
 
       // Update camera
-      camera.position.copy(player.position)
-      camera.position.y += PLAYER_HEIGHT * 0.9
+      camera.position.x = player.position.x
+      camera.position.z = player.position.z
+
+      const targetCameraY = player.position.y + PLAYER_HEIGHT * 0.9
+      // Smooth camera Y movement to hide the snap from auto-step
+      // Using a high lerp factor to keep it responsive but smooth enough to hide the 1-block snap
+      const smoothFactor = 15 * deltaTime
+      camera.position.y = THREE.MathUtils.lerp(camera.position.y, targetCameraY, Math.min(smoothFactor, 1))
+
       camera.rotation.order = 'YXZ'
       camera.rotation.y = player.rotation.y
       camera.rotation.x = player.rotation.x

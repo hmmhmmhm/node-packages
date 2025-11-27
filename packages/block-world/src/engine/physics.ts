@@ -60,26 +60,79 @@ export function updatePlayerPhysics(
 
   const collision = checkCollision(newPos, chunks)
 
+  // Helper for auto-step
+  const tryAutoStep = (targetX: number, targetZ: number): boolean => {
+    if (!player.isGrounded || player.isFlying) return false
+
+    // Check if we can stand 1 block higher
+    // We check at a slightly elevated position to clear the step
+    const stepHeight = 1.1
+    const targetY = player.position.y + stepHeight
+
+    // Check if there's space for the player at the new elevated position
+    const testPos = new THREE.Vector3(targetX, targetY, targetZ)
+    const stepCollision = checkCollision(testPos, chunks)
+
+    if (!stepCollision.x && !stepCollision.y && !stepCollision.z) {
+      // Check if the obstacle is actually low enough (approx 1 block)
+      // We do this by verifying we couldn't move at current height (which we know from main collision)
+      // but can move at height+1.
+      player.position.y = targetY
+      return true
+    }
+    return false
+  }
+
   if (!collision.x) {
     player.position.x = newPos.x
   } else {
-    player.velocity.x = 0
+    if (tryAutoStep(newPos.x, player.position.z)) {
+      player.position.x = newPos.x
+      // If we stepped, we need to update collision status for Y/Z checks potentially?
+      // But effectively we handled the "move" by teleporting up.
+      // We should probably ensure velocity doesn't fight us.
+      player.velocity.y = 0
+    } else {
+      player.velocity.x = 0
+    }
   }
 
-  if (!collision.y) {
-    player.position.y = newPos.y
-    player.isGrounded = false
-  } else {
-    if (player.velocity.y < 0) {
-      player.isGrounded = true
+  // Note: If we stepped up in X, player.position.y is now higher.
+  // The Y collision check uses newPos.y (lower).
+  // We should skip Y collision check or update newPos.y if we stepped?
+  // If we stepped, we are "grounded" on the new block.
+  // Let's assume if we change Y, we are effectively overriding gravity for this frame.
+
+  // We need to be careful not to snap back down.
+  const currentY = player.position.y
+  const stepped = currentY > newPos.y + 0.5 // Heuristic to detect if we stepped up
+
+  if (!stepped) {
+    if (!collision.y) {
+      player.position.y = newPos.y
+      player.isGrounded = false
+    } else {
+      if (player.velocity.y < 0) {
+        player.isGrounded = true
+      }
+      player.velocity.y = 0
     }
+  } else {
+    // We stepped up, so we are grounded
+    player.isGrounded = true
     player.velocity.y = 0
   }
 
   if (!collision.z) {
     player.position.z = newPos.z
   } else {
-    player.velocity.z = 0
+    if (tryAutoStep(player.position.x, newPos.z)) {
+      player.position.z = newPos.z
+      player.velocity.y = 0
+      player.isGrounded = true // Ensure we are grounded after step
+    } else {
+      player.velocity.z = 0
+    }
   }
 
   if (player.position.y < -10) {
