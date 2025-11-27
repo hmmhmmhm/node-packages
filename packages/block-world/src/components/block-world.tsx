@@ -1,5 +1,10 @@
 import { useEffect, useRef, useState } from 'react'
 import * as THREE from 'three'
+import { EffectComposer } from 'three/examples/jsm/postprocessing/EffectComposer.js'
+import { RenderPass } from 'three/examples/jsm/postprocessing/RenderPass.js'
+import { UnrealBloomPass } from 'three/examples/jsm/postprocessing/UnrealBloomPass.js'
+import { SAOPass } from 'three/examples/jsm/postprocessing/SAOPass.js'
+import { OutputPass } from 'three/examples/jsm/postprocessing/OutputPass.js'
 import { Player, Inventory, ChunkMeshData } from '../types'
 import { BlockType } from '../types'
 import { CHUNK_SIZE, CHUNK_HEIGHT, PLAYER_HEIGHT, MOUSE_SENSITIVITY, RENDER_DISTANCE, BlockHardness } from '../constants'
@@ -55,30 +60,39 @@ export function BlockWorld() {
       1000
     )
 
-    const renderer = new THREE.WebGLRenderer({ antialias: false })
+    const renderer = new THREE.WebGLRenderer({
+      antialias: false,
+      powerPreference: "high-performance",
+      stencil: false,
+      depth: true
+    })
     renderer.setSize(window.innerWidth, window.innerHeight)
-    renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2))
+    renderer.setPixelRatio(1) // Performance optimization for post-processing
+    renderer.shadowMap.enabled = true
+    renderer.shadowMap.type = THREE.PCFSoftShadowMap
+    renderer.toneMapping = THREE.ACESFilmicToneMapping
+    renderer.toneMappingExposure = 1.2
     containerRef.current.appendChild(renderer.domElement)
 
     // Lighting
     const ambientLight = new THREE.AmbientLight(0xffffff, 0.7)
     scene.add(ambientLight)
 
-    const directionalLight = new THREE.DirectionalLight(0xffffee, 1.1)
+    const directionalLight = new THREE.DirectionalLight(0xffffee, 2.0)
     directionalLight.position.set(100, 200, 50)
     directionalLight.castShadow = true
-    directionalLight.shadow.mapSize.width = 2048
-    directionalLight.shadow.mapSize.height = 2048
+    directionalLight.shadow.mapSize.width = 4096
+    directionalLight.shadow.mapSize.height = 4096
     directionalLight.shadow.camera.near = 0.5
     directionalLight.shadow.camera.far = 500
-    directionalLight.shadow.camera.left = -100
-    directionalLight.shadow.camera.right = 100
-    directionalLight.shadow.camera.top = 100
-    directionalLight.shadow.camera.bottom = -100
+    directionalLight.shadow.camera.left = -200
+    directionalLight.shadow.camera.right = 200
+    directionalLight.shadow.camera.top = 200
+    directionalLight.shadow.camera.bottom = -200
     directionalLight.shadow.bias = -0.0005
     scene.add(directionalLight)
 
-    const hemiLight = new THREE.HemisphereLight(0x87ceeb, 0x8b6914, 0.5)
+    const hemiLight = new THREE.HemisphereLight(0x87ceeb, 0x8b6914, 1.0)
     scene.add(hemiLight)
 
     // Sun Mesh with Glow
@@ -168,6 +182,36 @@ export function BlockWorld() {
     })
     const sky = new THREE.Mesh(skyGeometry, skyMaterial)
     scene.add(sky)
+
+    // Post-processing Setup
+    const composer = new EffectComposer(renderer)
+
+    const renderPass = new RenderPass(scene, camera)
+    composer.addPass(renderPass)
+
+    // SAO (Screen Space Ambient Occlusion) - Adds depth to corners
+    const saoPass = new SAOPass(scene, camera)
+    saoPass.params.saoBias = 0.5
+    saoPass.params.saoIntensity = 0.05
+    saoPass.params.saoScale = 200
+    saoPass.params.saoKernelRadius = 20
+    saoPass.params.saoMinResolution = 0
+    saoPass.params.saoBlur = true
+    saoPass.params.saoBlurRadius = 8
+    composer.addPass(saoPass)
+
+    // Bloom - Glowing effects
+    const bloomPass = new UnrealBloomPass(
+      new THREE.Vector2(window.innerWidth, window.innerHeight),
+      0.3,  // strength
+      0.5,  // radius
+      0.85  // threshold
+    )
+    composer.addPass(bloomPass)
+
+    // Output Pass (Tone Mapping & Color Correction)
+    const outputPass = new OutputPass()
+    composer.addPass(outputPass)
 
     // Initialize textures
     initializeTextures()
@@ -354,6 +398,7 @@ export function BlockWorld() {
       camera.aspect = window.innerWidth / window.innerHeight
       camera.updateProjectionMatrix()
       renderer.setSize(window.innerWidth, window.innerHeight)
+      composer.setSize(window.innerWidth, window.innerHeight)
     }
 
     const placeBlock = () => {
@@ -514,7 +559,7 @@ export function BlockWorld() {
 
       setChunkCount(chunkMeshes.size)
 
-      renderer.render(scene, camera)
+      composer.render()
     }
 
     console.log('[BlockWorld] 애니메이션 루프 시작')
