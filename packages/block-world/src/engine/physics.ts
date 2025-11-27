@@ -45,7 +45,9 @@ export function updatePlayerPhysics(
     player.velocity.x = moveDirection.x * moveSpeed
     player.velocity.z = moveDirection.z * moveSpeed
 
-    player.velocity.y += GRAVITY * deltaTime
+    if (!player.isGrounded) {
+      player.velocity.y += GRAVITY * deltaTime
+    }
 
     if (keys['Space'] && player.isGrounded) {
       player.velocity.y = JUMP_FORCE
@@ -53,92 +55,123 @@ export function updatePlayerPhysics(
     }
   }
 
-  const newPos = player.position.clone()
-  newPos.x += player.velocity.x * deltaTime
-  newPos.y += player.velocity.y * deltaTime
-  newPos.z += player.velocity.z * deltaTime
-
-  const collision = checkCollision(newPos, chunks)
-
   // Helper for auto-step
-  const tryAutoStep = (targetX: number, targetZ: number): boolean => {
+  const tryAutoStep = (
+    targetX: number,
+    targetZ: number
+  ): boolean => {
     if (!player.isGrounded || player.isFlying) return false
 
-    // Check if we can stand 1 block higher
-    // We check at a slightly elevated position to clear the step
     const stepHeight = 1.1
     const targetY = player.position.y + stepHeight
 
-    // Check if there's space for the player at the new elevated position
     const testPos = new THREE.Vector3(targetX, targetY, targetZ)
     const stepCollision = checkCollision(testPos, chunks)
 
     if (!stepCollision.x && !stepCollision.y && !stepCollision.z) {
-      // Check if the obstacle is actually low enough (approx 1 block)
-      // We do this by verifying we couldn't move at current height (which we know from main collision)
-      // but can move at height+1.
       player.position.y = targetY
       return true
     }
     return false
   }
 
-  if (!collision.x) {
-    player.position.x = newPos.x
-  } else {
-    if (tryAutoStep(newPos.x, player.position.z)) {
-      player.position.x = newPos.x
-      // If we stepped, we need to update collision status for Y/Z checks potentially?
-      // But effectively we handled the "move" by teleporting up.
-      // We should probably ensure velocity doesn't fight us.
-      player.velocity.y = 0
+  // Sequential Axis Resolution
+  // We handle X, Z, then Y to prevent wall-sticking where wall penetration causes false floor detection
+
+  // 1. X Movement
+  let nextX = player.position.x + player.velocity.x * deltaTime
+  const tempPos = player.position.clone()
+  tempPos.x = nextX
+
+  let col = checkCollision(tempPos, chunks)
+  if (col.x) {
+    if (tryAutoStep(nextX, player.position.z)) {
+      player.position.x = nextX
+      // tryAutoStep updates player.position.y, so we sync tempPos
+      tempPos.y = player.position.y
     } else {
       player.velocity.x = 0
-    }
-  }
-
-  // Note: If we stepped up in X, player.position.y is now higher.
-  // The Y collision check uses newPos.y (lower).
-  // We should skip Y collision check or update newPos.y if we stepped?
-  // If we stepped, we are "grounded" on the new block.
-  // Let's assume if we change Y, we are effectively overriding gravity for this frame.
-
-  // We need to be careful not to snap back down.
-  const currentY = player.position.y
-  const stepped = currentY > newPos.y + 0.5 // Heuristic to detect if we stepped up
-
-  if (!stepped) {
-    if (!collision.y) {
-      player.position.y = newPos.y
-      player.isGrounded = false
-    } else {
-      if (player.velocity.y < 0) {
-        player.isGrounded = true
-      }
-      player.velocity.y = 0
+      tempPos.x = player.position.x // Revert X
     }
   } else {
-    // We stepped up, so we are grounded
-    player.isGrounded = true
-    player.velocity.y = 0
+    player.position.x = nextX
   }
 
-  if (!collision.z) {
-    player.position.z = newPos.z
-  } else {
-    if (tryAutoStep(player.position.x, newPos.z)) {
-      player.position.z = newPos.z
-      player.velocity.y = 0
-      player.isGrounded = true // Ensure we are grounded after step
+  // 2. Z Movement
+  let nextZ = player.position.z + player.velocity.z * deltaTime
+  tempPos.z = nextZ
+
+  col = checkCollision(tempPos, chunks)
+  if (col.z) {
+    if (tryAutoStep(player.position.x, nextZ)) {
+      player.position.z = nextZ
+      tempPos.y = player.position.y
     } else {
       player.velocity.z = 0
+      tempPos.z = player.position.z // Revert Z
     }
+  } else {
+    player.position.z = nextZ
+  }
+
+  // 3. Y Movement
+  let nextY = player.position.y + player.velocity.y * deltaTime
+  tempPos.y = nextY
+
+  col = checkCollision(tempPos, chunks)
+  if (col.y) {
+    if (player.velocity.y < 0) {
+      // Landed on ground
+      player.isGrounded = true
+
+      // Snap to ground
+      const groundH = getGroundHeight(tempPos, chunks)
+      if (groundH !== null) {
+        player.position.y = groundH
+      } else {
+        player.position.y = nextY // Fallback
+      }
+    } else {
+      // Hit ceiling
+      player.velocity.y = 0
+      // Do not update position.y to nextY to avoid sticking in ceiling
+    }
+    player.velocity.y = 0
+  } else {
+    // No Y collision
+    player.position.y = nextY
+    player.isGrounded = false
   }
 
   if (player.position.y < -10) {
     player.position.y = 50
     player.velocity.set(0, 0, 0)
   }
+}
+
+function getGroundHeight(position: THREE.Vector3, chunks: Map<string, Uint8Array>): number | null {
+  const padding = PLAYER_WIDTH / 2
+  const groundY = position.y - 0.1
+  let maxHitY = -Infinity
+  let hit = false
+
+  for (let ox = -1; ox <= 1; ox++) {
+    for (let oz = -1; oz <= 1; oz++) {
+      // Check wider area (0.9 padding) to ensure we catch edges we are standing on
+      // preventing jitter at block boundaries where auto-step puts us on the edge
+      const checkX = Math.floor(position.x + ox * padding * 0.9)
+      const checkZ = Math.floor(position.z + oz * padding * 0.9)
+
+      // Check block at floor(groundY)
+      if (isBlockSolid(checkX, Math.floor(groundY), checkZ, chunks)) {
+        // The top of this block is floor(groundY) + 1
+        const blockTop = Math.floor(groundY) + 1
+        if (blockTop > maxHitY) maxHitY = blockTop
+        hit = true
+      }
+    }
+  }
+  return hit ? maxHitY : null
 }
 
 function checkCollision(
@@ -175,8 +208,8 @@ function checkCollision(
 
   for (let ox = -1; ox <= 1; ox++) {
     for (let oz = -1; oz <= 1; oz++) {
-      const checkX = Math.floor(position.x + ox * padding * 0.5)
-      const checkZ = Math.floor(position.z + oz * padding * 0.5)
+      const checkX = Math.floor(position.x + ox * padding * 0.9)
+      const checkZ = Math.floor(position.z + oz * padding * 0.9)
 
       if (isBlockSolid(checkX, Math.floor(groundY), checkZ, chunks)) {
         collision.y = true
